@@ -1,1 +1,1 @@
-# qa
+# [qa](http://github.com/yino/qo)
