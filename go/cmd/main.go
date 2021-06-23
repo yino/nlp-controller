@@ -8,6 +8,6 @@ import (
 
 func main() {
 	r := gin.Default()
-
+	gin.SetMode(gin.ReleaseMode)
 	common.ResisterGouterGin(r)
 }
