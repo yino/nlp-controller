@@ -1,13 +1,20 @@
 package main
 
 import (
-	"nlp/service/common"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"nlp/service/common"
+	"os"
 )
 
 func main() {
-	r := gin.Default()
+	os.Setenv("GIN_MODE", "release")
+
+	router := gin.New()
+	//router.Use(ginrus.Ginrus(log.StandardLogger(), time.RFC3339, true), gin.Recovery())
 	gin.SetMode(gin.ReleaseMode)
-	common.ResisterGouterGin(r)
+	common.ResisterRouterGin(router)
+
+	routerList := common.RouterList
+	fmt.Println(routerList)
 }
