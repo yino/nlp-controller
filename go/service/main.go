@@ -2,28 +2,27 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"log"
 	"nlp/service/common"
 	"os"
 	"strings"
+	"time"
+
+	"github.com/gin-gonic/contrib/ginrus"
+	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
-var apis []*common.ApiConfig
-func init()  {
-	apis = common.RouterList
-}
 
 func main() {
 	os.Setenv("GIN_MODE", "release")
-
-	router := gin.New()
-	//router.Use(ginrus.Ginrus(log.StandardLogger(), time.RFC3339, true), gin.Recovery())
 	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.Use(ginrus.Ginrus(log.StandardLogger(), time.RFC3339, true), gin.Recovery())
 	router.GET("/", func(context *gin.Context) {
-		context.JSON(200,"123123")
+		context.JSON(200, "123123")
 	})
 	v1 := router.Group("v1")
 	{
+		apis := common.RouterList
 		fmt.Println(apis)
 		if apis != nil {
 			for _, apiConf := range apis {
