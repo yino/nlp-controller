@@ -2,25 +2,28 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"nlp/service/question"
+	"nlp/interfaces"
 )
 
 func RegisterCoreRouter(c *gin.Engine) {
 
 	v1 := c.Group("v1")
 	{
-		core := v1.Group("corp")
+		core := v1.Group("core")
 		{
 			// question
-			core.GET("/question/index", question.HandleQuestionIndex)
-			core.POST("/question/add", question.HandleQuestionAdd)
-			core.POST("/question/edit", question.HandleQuestionEdit)
-			core.GET("/question/delete", question.HandleQuestionDel)
-			core.GET("/question/train", question.HandleQuestionTrain)
+			core.GET("/question/index", interfaces.HandlerQuestionPage)
+			core.POST("/question/add", interfaces.HandlerQuestionAdd)
+			core.POST("/question/edit", interfaces.HandlerQuestionEdit)
+			core.GET("/question/delete", interfaces.HandlerQuestionDelete)
+			core.GET("/question/train", interfaces.HandlerQuestionTrain)
 
 			// user
 			core.GET("/user/info")
 			core.GET("/user/edit")
+
+			// login
+			core.POST("/login", interfaces.HandlerLogin)
 		}
 	}
 
