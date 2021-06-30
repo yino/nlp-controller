@@ -21,9 +21,9 @@ func RegisterCoreRouter(c *gin.Engine) {
 			// user
 			core.GET("/user/info")
 			core.GET("/user/edit")
-
-			// login
-			core.POST("/login", interfaces.HandlerLogin)
+			// 登录注册
+			core.POST("/login", interfaces.HandlerUserLogin)
+			core.POST("/login", interfaces.HandlerUserRegister)
 		}
 	}
 
