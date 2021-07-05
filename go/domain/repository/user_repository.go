@@ -9,3 +9,5 @@ type UserRepository interface {
 	GetUserPage(search map[string]interface{}, page uint, pageSize uint) (datList []entity.User, total uint, err error)
 	UserInfo(uint64) (*entity.User, error)
 }
+
+

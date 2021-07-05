@@ -1,0 +1,6 @@
+mysql:
+  host: 127.45.45.1
+  user: sunxiaohu,
+  password: sk532359025,
+  port: 3306,
+  db: nlp
