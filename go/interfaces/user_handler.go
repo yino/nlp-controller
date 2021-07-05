@@ -10,7 +10,6 @@ type Users struct {
 }
 
 func (u *Users) HandlerUserInfo(c *gin.Context) {
-
 }
 func (u *Users) HandlerUserEdit(c *gin.Context) {
 
