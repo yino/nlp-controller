@@ -16,7 +16,7 @@ type Config struct {
 		Db       string `yaml:"db"`
 	}
 	App struct {
-		Host string `yaml:"ip"`
+		Host string `yaml:"host"`
 		Port string `yaml:"port"`
 	}
 }
