@@ -24,6 +24,9 @@ func (u *UserApp) GetUserPage(search map[string]interface{}, page uint, pageSize
 func (u *UserApp) UserInfo(id uint64) (*entity.User, error) {
 	return u.userRepo.UserInfo(id)
 }
+func (u *UserApp) FindUserInfo(search map[string]interface{}) (*entity.User, error) {
+	return u.userRepo.FindUserInfo(search)
+}
 
 func NewUserApp(repo repository.UserRepository) UserApp {
 	return UserApp{

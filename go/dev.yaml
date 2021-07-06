@@ -4,4 +4,6 @@ mysql:
   password: sk532359025
   port: 3306
   db: nlp
-
+app:
+  host: 127.0.0.1
+  port: 8000

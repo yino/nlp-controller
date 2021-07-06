@@ -15,7 +15,13 @@ type Config struct {
 		Port     string `yaml:"port"`
 		Db       string `yaml:"db"`
 	}
+	App struct {
+		Host string `yaml:"ip"`
+		Port string `yaml:"port"`
+	}
 }
+
+var Conf *Config
 
 func GetConf() *Config {
 	yamlFile, err := ioutil.ReadFile("./" + infrastructure.GetEnv())
@@ -29,6 +35,6 @@ func GetConf() *Config {
 	if err != nil {
 		panic("获取config yaml失败" + err.Error())
 	}
-
+	Conf = _config
 	return _config
 }

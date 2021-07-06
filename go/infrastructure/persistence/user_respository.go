@@ -1,8 +1,10 @@
 package persistence
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"nlp/domain/entity"
+	"strconv"
 )
 
 type UserRepo struct {
@@ -59,5 +61,21 @@ func (obj *UserRepo) UserInfo(id uint64) (*entity.User, error) {
 	user := new(entity.User)
 	res := obj.db.First(user)
 
+	return user, res.Error
+}
+
+func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*entity.User, error) {
+	user := new(entity.User)
+	if searchMobile, ok := search["mobile"]; ok {
+		intMobile, _ := strconv.Atoi(searchMobile.(string))
+		mobile := uint64(intMobile)
+		user.Mobile = mobile
+	}
+
+	if password, ok := search["password"]; ok {
+		user.Password = password.(string)
+	}
+	res := obj.db.First(user)
+	fmt.Println(user)
 	return user, res.Error
 }
