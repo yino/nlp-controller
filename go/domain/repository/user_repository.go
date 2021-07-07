@@ -10,3 +10,4 @@ type UserRepository interface {
 	UserInfo(uint64) (*entity.User, error)
 	FindUserInfo(search map[string]interface{}) (*entity.User, error)
 }
+

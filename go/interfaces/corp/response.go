@@ -1,5 +1,5 @@
-package interfaces
+package corp
 
 type UserLogin struct {
-
 }
+

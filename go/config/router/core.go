@@ -5,12 +5,12 @@ import (
 	"github.com/gin-gonic/gin"
 	app "nlp/application"
 	"nlp/infrastructure/persistence"
-	"nlp/interfaces"
+	"nlp/interfaces/corp"
 )
 
 func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 	userApp := app.NewUserApp(repo.User)
-	UserInterFace := interfaces.NewUsersInterface(userApp)
+	UserInterFace := corp.NewUsersInterface(userApp)
 	fmt.Println("user interface")
 	v1 := c.Group("v1")
 	{

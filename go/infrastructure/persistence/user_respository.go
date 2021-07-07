@@ -1,7 +1,7 @@
 package persistence
 
 import (
-	"fmt"
+	"errors"
 	"gorm.io/gorm"
 	"nlp/domain/entity"
 	"strconv"
@@ -17,6 +17,14 @@ func NewUserRepository(db *gorm.DB) *UserRepo {
 }
 
 func (obj *UserRepo) Add(user *entity.User) error {
+	var count int64
+	err := obj.db.Model(&entity.User{}).Where("mobile = ?", user.Mobile).Count(&count).Error
+	if err != nil {
+		return err
+	}
+	if count >0  {
+		return errors.New("mobile already exists")
+	}
 	res := obj.db.Create(user)
 	return res.Error
 }
@@ -76,6 +84,6 @@ func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*entity.User, 
 		user.Password = password.(string)
 	}
 	res := obj.db.First(user)
-	fmt.Println(user)
 	return user, res.Error
 }
+

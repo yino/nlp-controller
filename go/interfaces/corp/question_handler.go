@@ -1,4 +1,4 @@
-package interfaces
+package corp
 
 import (
 	"github.com/gin-gonic/gin"
