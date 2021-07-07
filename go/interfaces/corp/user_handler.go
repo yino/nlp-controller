@@ -1,12 +1,13 @@
 package corp
 
 import (
-	"github.com/gin-gonic/gin"
 	"nlp/application"
 	"nlp/domain/entity"
 	"nlp/interfaces"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Users struct {
@@ -18,6 +19,15 @@ func (u *Users) HandlerUserInfo(c *gin.Context) {
 func (u *Users) HandlerUserEdit(c *gin.Context) {
 
 }
+
+// @Summary  corp登录
+// @Description corp登录
+// @Tags corp
+// @accept  json
+// @Produce json
+// @Param login body LoginReq true "login"
+// @Success 200 {object} UserLoginResp
+// @Router /v1/core/login [post]
 func (u *Users) HandlerUserLogin(c *gin.Context) {
 	var loginReq LoginReq
 	if err := c.ShouldBindJSON(&loginReq); err != nil {
@@ -27,11 +37,12 @@ func (u *Users) HandlerUserLogin(c *gin.Context) {
 	search := make(map[string]interface{})
 	search["mobile"] = loginReq.Mobile
 	search["password"] = loginReq.Password
-	result, ret := u.us.Login(search)
+	result, token, ret := u.us.Login(search)
 	if ret != interfaces.StatusSuccess {
 		interfaces.SendResp(c, ret)
 	} else {
-		interfaces.SendResp(c, result, ret)
+		resp := UserLoginResp{Token: token, Mobile: result.Mobile, Name: result.Name}
+		interfaces.SendResp(c, resp, ret)
 	}
 
 	return

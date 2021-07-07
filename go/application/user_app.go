@@ -4,6 +4,9 @@ import (
 	"nlp/domain/entity"
 	"nlp/domain/repository"
 	"nlp/interfaces"
+
+	_ "github.com/swaggo/gin-swagger/example/basic/docs"
+	"github.com/yino/common"
 )
 
 type UserApp struct {
@@ -31,12 +34,14 @@ func (u *UserApp) GetUserPage(search map[string]interface{}, page uint, pageSize
 func (u *UserApp) UserInfo(id uint64) (*entity.User, error) {
 	return u.userRepo.UserInfo(id)
 }
-func (u *UserApp) Login(search map[string]interface{}) (*entity.User, int) {
+
+func (u *UserApp) Login(search map[string]interface{}) (user *entity.User, token string, ret int) {
 	user, err := u.userRepo.FindUserInfo(search)
 	if err != nil {
-		return user, interfaces.ErrorUserNotFound
+		return user, "", interfaces.ErrorUserNotFound
 	}
-	return user, interfaces.StatusSuccess
+	token = common.CreateUidToken(user.ID)
+	return user, token, interfaces.StatusSuccess
 }
 
 func NewUserApp(repo repository.UserRepository) UserApp {

@@ -1,9 +1,10 @@
 package entity
 
 import (
+	"time"
+
 	"github.com/yino/common"
 	"gorm.io/gorm"
-	"time"
 )
 
 type User struct {
