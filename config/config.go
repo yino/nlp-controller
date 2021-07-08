@@ -2,9 +2,10 @@ package config
 
 import (
 	"fmt"
+	"github.com/yino/nlp-controller/infrastructure"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"github.com/yino/nlp-controller/infrastructure"
+	"os"
 )
 
 type Config struct {
@@ -16,16 +17,17 @@ type Config struct {
 		Db       string `yaml:"db"`
 	}
 	App struct {
-		Host string `yaml:"host"`
-		Port string `yaml:"port"`
+		Host        string `yaml:"host"`
+		Port        string `yaml:"port"`
+		TokenExpire int64  `yaml:"token_expire"`
 	}
 }
 
 var Conf *Config
 
 func GetConf() *Config {
-	yamlFile, err := ioutil.ReadFile("./" + infrastructure.GetEnv())
-	fmt.Println(yamlFile, err)
+	pwdPath, _ := os.Getwd()
+	yamlFile, err := ioutil.ReadFile(pwdPath+"/../" + infrastructure.GetEnv())
 	if err != nil {
 		fmt.Println(err.Error())
 		panic("config 文件不存在")

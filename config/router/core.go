@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	app "github.com/yino/nlp-controller/application"
 	"github.com/yino/nlp-controller/infrastructure/persistence"
@@ -11,7 +10,6 @@ import (
 func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 	userApp := app.NewUserApp(repo.User)
 	UserInterFace := corp.NewUsersInterface(userApp)
-	fmt.Println("user interface")
 	v1 := c.Group("v1")
 	{
 		core := v1.Group("core")
