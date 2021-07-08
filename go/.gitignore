@@ -1,5 +1,4 @@
 .vscode
 .idea
-dev.yaml
-test.yaml
-prod.yaml
+*.yaml
+!template.yaml
