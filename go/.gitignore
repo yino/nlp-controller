@@ -1,5 +1,0 @@
-.vscode
-.idea
-*.yaml
-!template.yaml
-!docs/swagger.yaml

@@ -1,3 +1,5 @@
 .vscode
 .idea
-go/.idea
+*.yaml
+!template.yaml
+!docs/swagger.yaml
