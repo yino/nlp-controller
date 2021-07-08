@@ -3,9 +3,9 @@ package router
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	app "github.com/yino/nlp/application"
-	"github.com/yino/nlp/infrastructure/persistence"
-	"github.com/yino/nlp/interfaces/corp"
+	app "github.com/yino/nlp-controller/application"
+	"github.com/yino/nlp-controller/infrastructure/persistence"
+	"github.com/yino/nlp-controller/interfaces/corp"
 )
 
 func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {

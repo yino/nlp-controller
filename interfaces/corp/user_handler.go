@@ -1,9 +1,9 @@
 package corp
 
 import (
-	"github.com/yino/nlp/application"
-	"github.com/yino/nlp/domain/entity"
-	"github.com/yino/nlp/interfaces"
+	"github.com/yino/nlp-controller/application"
+	"github.com/yino/nlp-controller/domain/entity"
+	"github.com/yino/nlp-controller/interfaces"
 	"strconv"
 	"time"
 

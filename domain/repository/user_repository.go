@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/yino/nlp/domain/entity"
+import "github.com/yino/nlp-controller/domain/entity"
 
 type UserRepository interface {
 	Add(user *entity.User) error

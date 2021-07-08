@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/yino/nlp/config"
-	"github.com/yino/nlp/infrastructure/persistence"
+	"github.com/yino/nlp-controller/config"
+	"github.com/yino/nlp-controller/infrastructure/persistence"
 
 	"github.com/gin-gonic/gin"
 )

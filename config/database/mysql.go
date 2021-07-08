@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/yino/nlp/config"
+	"github.com/yino/nlp-controller/config"
 )
 
 type MysqlConfig struct {

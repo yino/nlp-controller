@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"errors"
-	"github.com/yino/nlp/domain/entity"
+	"github.com/yino/nlp-controller/domain/entity"
 	"gorm.io/gorm"
 	"strconv"
 )

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/yino/nlp/service/common"
+	"github.com/yino/nlp-controller/service/common"
 	"os"
 )
 

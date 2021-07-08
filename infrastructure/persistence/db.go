@@ -5,8 +5,8 @@ import (
 	"gorm.io/driver/mysql"
 	_ "gorm.io/driver/mysql" //这个一定要引入哦！
 	"gorm.io/gorm"
-	"github.com/yino/nlp/domain/entity"
-	"github.com/yino/nlp/domain/repository"
+	"github.com/yino/nlp-controller/domain/entity"
+	"github.com/yino/nlp-controller/domain/repository"
 )
 
 type Repositories struct {
