@@ -1,12 +1,10 @@
 package application
 
 import (
+	"github.com/yino/common"
 	"nlp/domain/entity"
 	"nlp/domain/repository"
 	"nlp/interfaces"
-
-	_ "github.com/swaggo/gin-swagger/example/basic/docs"
-	"github.com/yino/common"
 )
 
 type UserApp struct {
