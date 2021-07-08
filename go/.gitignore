@@ -1,4 +1,4 @@
 .vscode
 .idea
-./*.yaml
+*.yaml
 !template.yaml
