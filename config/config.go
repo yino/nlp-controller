@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"nlp/infrastructure"
+	"github.com/yino/nlp/infrastructure"
 )
 
 type Config struct {

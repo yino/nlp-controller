@@ -2,8 +2,8 @@ package persistence
 
 import (
 	"errors"
+	"github.com/yino/nlp/domain/entity"
 	"gorm.io/gorm"
-	"nlp/domain/entity"
 	"strconv"
 )
 
@@ -22,7 +22,7 @@ func (obj *UserRepo) Add(user *entity.User) error {
 	if err != nil {
 		return err
 	}
-	if count >0  {
+	if count > 0 {
 		return errors.New("mobile already exists")
 	}
 	res := obj.db.Create(user)
@@ -86,4 +86,3 @@ func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*entity.User, 
 	res := obj.db.First(user)
 	return user, res.Error
 }
-

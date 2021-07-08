@@ -1,4 +1,4 @@
-module nlp
+module github.com/yino/nlp
 
 go 1.16
 

@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"nlp/config"
-	"nlp/config/router"
+	"github.com/yino/nlp/config"
+	"github.com/yino/nlp/config/router"
 	"os"
 
-	_ "nlp/docs"
+	_ "github.com/yino/nlp/docs"
 
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"

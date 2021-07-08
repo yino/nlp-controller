@@ -2,9 +2,9 @@ package application
 
 import (
 	"github.com/yino/common"
-	"nlp/domain/entity"
-	"nlp/domain/repository"
-	"nlp/interfaces"
+	"github.com/yino/nlp/domain/entity"
+	"github.com/yino/nlp/domain/repository"
+	"github.com/yino/nlp/interfaces"
 )
 
 type UserApp struct {
