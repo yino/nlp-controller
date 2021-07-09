@@ -139,6 +139,13 @@ func (u *User) Login(search map[string]interface{}) (vo vo.UserLoginVo, ret int)
 	return vo, interfaces.StatusSuccess
 }
 
+// AuthToken: 校验token
+func (u *User) AuthToken(token string) {
+	search := make(map[string]interface{})
+	search["token"] = token
+	user, err := u.UserRepo.FindUserInfo(search)
+}
+
 func NewUserDomain(repo repository.UserRepository) User {
 	return User{
 		UserRepo: repo,

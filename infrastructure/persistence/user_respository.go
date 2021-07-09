@@ -90,3 +90,7 @@ func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*po.User, erro
 
 	return user, res.Error
 }
+
+func (obj *UserRepo) FindUserByToken(token string) (*po.User, error) {
+
+}

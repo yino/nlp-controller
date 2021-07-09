@@ -7,6 +7,7 @@ const (
 
 	// 4000 ~ 4999
 	ErrorUserNotFound = 4000
+	ErrorNotLogin     = 4001
 
 	// database err 5000~5999
 	ErrorRegister    = 5001
@@ -22,4 +23,5 @@ var StatusText = map[int]string{
 	ErrorRegister:     "register fail",
 	ErrorCreateToken:  "create token fail",
 	ErrorParams:       "params error",
+	ErrorNotLogin:     "please login first",
 }

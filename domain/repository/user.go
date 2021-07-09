@@ -12,4 +12,5 @@ type UserRepository interface {
 	GetUserPage(search map[string]interface{}, page uint, pageSize uint) (datList []po.User, total uint, err error)
 	UserInfo(uint64) (*po.User, error)
 	FindUserInfo(search map[string]interface{}) (*po.User, error)
+	FindUserByToken(token string)(*po.User, error)
 }
