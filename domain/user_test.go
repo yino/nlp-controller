@@ -1,27 +1,32 @@
-package application_test
+package domain_test
 
 import (
 	"fmt"
+	"github.com/yino/nlp-controller/domain/entity"
 	"testing"
 	"time"
 
-	"github.com/yino/nlp-controller/application"
 	"github.com/yino/nlp-controller/config"
-	"github.com/yino/nlp-controller/domain/entity"
+	"github.com/yino/nlp-controller/config/log"
+	"github.com/yino/nlp-controller/domain"
 	"github.com/yino/nlp-controller/infrastructure/persistence"
 )
-var userApp application.UserApp
-func init(){
+
+var user domain.User
+
+func init() {
 	config.GetConf()
 	repo, _ := persistence.NewRepositories(config.Conf.MySql.User, config.Conf.MySql.Password, config.Conf.MySql.Port, config.Conf.MySql.Host, config.Conf.MySql.Db)
-	userApp = application.NewUserApp(repo.User)
+	log.InitLogger()
+	//repo.AutoMigrate()
+	user = domain.NewUserDomain(repo.User)
 }
 func TestLogin(t *testing.T) {
 	search := map[string]interface{}{
 		"mobile":   "15829090357",
 		"password": "123456",
 	}
-	fmt.Println(userApp.Login(search))
+	fmt.Println(user.Login(search))
 }
 
 func TestRegister(t *testing.T) {
@@ -32,5 +37,7 @@ func TestRegister(t *testing.T) {
 	userEntity.Name = "yino"
 	userEntity.CreatedAt = time.Now()
 	userEntity.UpdatedAt = time.Now()
-	fmt.Println(userApp.Add(userEntity))
+	res, err := user.Add(userEntity)
+	fmt.Println("=============")
+	fmt.Println(res, err)
 }

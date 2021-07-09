@@ -3,6 +3,7 @@ package corp
 import (
 	"github.com/yino/nlp-controller/application"
 	"github.com/yino/nlp-controller/domain/entity"
+	"github.com/yino/nlp-controller/domain/vo"
 	"github.com/yino/nlp-controller/interfaces"
 	"strconv"
 	"time"
@@ -29,7 +30,7 @@ func (u *Users) HandlerUserEdit(c *gin.Context) {
 // @Success 200 {object} UserLoginResp
 // @Router /v1/core/login [post]
 func (u *Users) HandlerUserLogin(c *gin.Context) {
-	var loginReq LoginReq
+	var loginReq vo.LoginReq
 	if err := c.ShouldBindJSON(&loginReq); err != nil {
 		interfaces.SendResp(c, interfaces.ErrorParams, err.Error())
 		return
@@ -37,19 +38,17 @@ func (u *Users) HandlerUserLogin(c *gin.Context) {
 	search := make(map[string]interface{})
 	search["mobile"] = loginReq.Mobile
 	search["password"] = loginReq.Password
-	result, token, ret := u.us.Login(search)
+	vo, ret := u.us.Login(search)
 	if ret != interfaces.StatusSuccess {
 		interfaces.SendResp(c, ret)
 	} else {
-		resp := UserLoginResp{Token: token, Mobile: result.Mobile, Name: result.Name}
-		interfaces.SendResp(c, resp, ret)
+		interfaces.SendResp(c, vo, ret)
 	}
-
 	return
 }
 
 func (u *Users) HandlerUserRegister(c *gin.Context) {
-	var registerReq RegisterReq
+	var registerReq vo.RegisterReq
 	if err := c.ShouldBindJSON(&registerReq); err != nil {
 		interfaces.SendResp(c, interfaces.ErrorParams, err.Error())
 		return

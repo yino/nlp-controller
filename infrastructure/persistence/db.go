@@ -2,11 +2,11 @@ package persistence
 
 import (
 	"fmt"
+	"github.com/yino/nlp-controller/domain/po"
+	"github.com/yino/nlp-controller/domain/repository"
 	"gorm.io/driver/mysql"
 	_ "gorm.io/driver/mysql" //这个一定要引入哦！
 	"gorm.io/gorm"
-	"github.com/yino/nlp-controller/domain/entity"
-	"github.com/yino/nlp-controller/domain/repository"
 )
 
 type Repositories struct {
@@ -22,6 +22,7 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 		panic("数据库连接失败:" + err.Error() + dsn)
 		return nil, err
 	}
+	fmt.Println("MySql连接成功")
 	//db.LogMode(true) .
 	return &Repositories{
 		User: NewUserRepository(db),
@@ -31,5 +32,5 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 
 //This migrate all tables
 func (s *Repositories) AutoMigrate() error {
-	return s.db.AutoMigrate(&entity.User{})
+	return s.db.AutoMigrate(&po.User{}, &po.UserAppKeyPo{}, &po.QaQuestion{})
 }

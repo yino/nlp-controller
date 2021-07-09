@@ -1,4 +1,5 @@
-package corp
+package vo
+
 
 type LoginReq struct {
 	Mobile   string `form:"mobile" json:"mobile" binding:"required"`
