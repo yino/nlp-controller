@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"time"
+
 	"github.com/yino/nlp-controller/domain/po"
 
 	"gorm.io/gorm"
@@ -44,12 +46,14 @@ func (obj *QaQuestionRepo) Add(question *po.QaQuestion) error {
 
 // Edit edit
 func (obj *QaQuestionRepo) Edit(question *po.QaQuestion) error {
-	return nil
+	question.UpdatedAt = time.Now()
+	return obj.db.Where("id = ?", question.ID).Save(question).Error
 }
 
 //Delete delete
 func (obj *QaQuestionRepo) Delete(id uint64) error {
-	return nil
+
+	return obj.db.Where("id = ?", id).Delete(&po.QaQuestion{}).Error
 }
 
 // BatchInsert 批量插入
