@@ -2,9 +2,10 @@ package domain_test
 
 import (
 	"fmt"
-	"github.com/yino/nlp-controller/domain/entity"
 	"testing"
 	"time"
+
+	"github.com/yino/nlp-controller/domain/entity"
 
 	"github.com/yino/nlp-controller/config"
 	"github.com/yino/nlp-controller/config/log"
@@ -37,7 +38,8 @@ func TestRegister(t *testing.T) {
 	userEntity.Name = "yino"
 	userEntity.CreatedAt = time.Now()
 	userEntity.UpdatedAt = time.Now()
-	res, err := user.Add(userEntity)
+	err := user.Add(userEntity)
+
 	fmt.Println("=============")
-	fmt.Println(res, err)
+	fmt.Println(err)
 }

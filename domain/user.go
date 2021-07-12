@@ -25,7 +25,7 @@ type User struct {
 // @param user	entity *entity.User	"user 实体"
 // @return int "是否成功"
 // @return string "描述"
-func (u *User) Add(user *entity.User) (int, string) {
+func (u *User) Add(user *entity.User) error {
 	userPo := new(po.User)
 	userPo.Name = user.Name
 	userPo.Mobile = user.Mobile
@@ -38,9 +38,9 @@ func (u *User) Add(user *entity.User) (int, string) {
 			zap.ByteString("data", data),
 			zap.Error(err),
 		)
-		return interfaces.ErrorRegister, err.Error()
+		return err
 	}
-	return interfaces.StatusSuccess, ""
+	return nil
 
 }
 
@@ -114,17 +114,17 @@ func (u *User) GetUserPage(search map[string]interface{}, page uint, pageSize ui
 // @param id uint64 "user id"
 // @return vo.UserVo
 // @return int
-func (u *User) UserInfo(id uint64) (vo.UserVo, int) {
+func (u *User) UserInfo(id uint64) (vo.UserVo, error) {
 	userPo, err := u.UserRepo.UserInfo(id)
 	if err != nil {
-		return vo.UserVo{}, interfaces.ErrorUserNotFound
+		return vo.UserVo{}, err
 	}
 	return vo.UserVo{
 		Id:     userPo.ID,
 		Mobile: userPo.Mobile,
 		Name:   userPo.Name,
 		Email:  userPo.Email,
-	}, interfaces.StatusSuccess
+	}, nil
 }
 
 // Login login

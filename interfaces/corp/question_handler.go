@@ -19,3 +19,7 @@ func HandlerQuestionDelete(c *gin.Context) {
 func HandlerQuestionTrain(c *gin.Context) {
 
 }
+
+func NewQaQuestionInterface() {
+
+}

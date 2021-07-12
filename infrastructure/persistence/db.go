@@ -15,6 +15,7 @@ import (
 // Repositories mysql repo
 type Repositories struct {
 	User repository.UserRepository
+	Qa   repository.QaQuestionRepository
 	db   *gorm.DB
 }
 
@@ -30,6 +31,7 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 	//db.LogMode(true) .
 	return &Repositories{
 		User: NewUserRepository(db),
+		Qa:   NewQaQuestionRepository(db),
 		db:   db,
 	}, nil
 }

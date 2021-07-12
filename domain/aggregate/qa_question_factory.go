@@ -1,17 +1,16 @@
 package aggregate
 
 import (
-	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/repository"
 )
 
-// QaQuestionFactory: QaQuestion 聚合根
-type QaQuestionFactory struct {
+// QaFactory: QaQuestion 聚合根
+type QaFactory struct {
 	UserRepo       repository.UserRepository
 	QaQuestionRepo repository.QaQuestionRepository
 }
 
-// NewQuestion: 创建question
-func (factory *QaQuestionFactory) NewQuestion(userId uint64, question []entity.QaQuestion) error {
-	return nil
+// MatchQuestion 检索问题聚合根
+func (factory *QaFactory) MatchQuestion(userId uint64, question string) {
+
 }
