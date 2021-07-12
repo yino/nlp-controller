@@ -4,14 +4,14 @@ import (
 	"github.com/yino/nlp-controller/domain/po"
 )
 
+// User entity user
 type User struct {
 	po.User
-	AppKey []*po.UserAppKeyPo
+	AppKey      []po.UserAppKeyPo `gorm:"foreignKey:UserId;"`
+	QaQuestions []po.QaQuestion   `gorm:"foreignKey:UserId;"`
 }
 
-
-// CreateAppKey: 生成 app key
-// 实体创建app key
-func (user *User) CreateAppKey(){
+// CreateAppKey 实体创建app key
+func (user *User) CreateAppKey() {
 
 }

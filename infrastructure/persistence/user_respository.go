@@ -2,11 +2,12 @@ package persistence
 
 import (
 	"errors"
+	"strconv"
+
 	"github.com/yino/common"
 	"github.com/yino/nlp-controller/domain/po"
 
 	"gorm.io/gorm"
-	"strconv"
 )
 
 type UserRepo struct {
@@ -92,5 +93,10 @@ func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*po.User, erro
 }
 
 func (obj *UserRepo) FindUserByToken(token string) (*po.User, error) {
+	whereUser := new(po.User)
+	user := new(po.User)
+	user.Token = token
+	res := obj.db.Where(whereUser).First(user)
 
+	return user, res.Error
 }

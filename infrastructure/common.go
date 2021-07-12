@@ -6,18 +6,19 @@ import (
 )
 
 func GetEnv() string {
+	pwdPath, _ := os.Getwd()
 	env := os.Getenv("env")
 	defaultEnv := ""
 	filename := ".yaml"
 	switch env {
 	case "prod":
-		filename = "prod" + filename
+		filename = "./prod" + filename
 		defaultEnv = env
 	case "test":
-		filename = "test" + filename
+		filename = pwdPath+"/../" + "test" + filename
 		defaultEnv = env
 	default:
-		filename = "dev" + filename
+		filename = "./dev" + filename
 		defaultEnv = "dev"
 	}
 

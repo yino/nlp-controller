@@ -5,6 +5,7 @@ import (
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/repository"
 	"github.com/yino/nlp-controller/domain/vo"
+	"github.com/yino/nlp-controller/interfaces"
 )
 
 // 用户领域服务
@@ -24,12 +25,21 @@ func (u *UserApp) GetUserList(search map[string]interface{}) ([]vo.UserVo, error
 func (u *UserApp) GetUserPage(search map[string]interface{}, page uint, pageSize uint) (pageVo vo.UserPageVo, err error) {
 	return u.userDomain.GetUserPage(search, page, pageSize)
 }
-func (u *UserApp) UserInfo(id uint64) (vo.UserVo, error) {
+func (u *UserApp) UserInfo(id uint64) (vo.UserVo, int) {
 	return u.userDomain.UserInfo(id)
 }
 
 func (u *UserApp) Login(search map[string]interface{}) (vo vo.UserLoginVo, ret int) {
 	return u.userDomain.Login(search)
+}
+
+func (u *UserApp) AuthToken(token string) (vo.UserVo, int) {
+	vo, ok := u.userDomain.AuthToken(token)
+	if !ok {
+		return vo, interfaces.ErrorToken
+	} else {
+		return vo, interfaces.StatusSuccess
+	}
 }
 
 func NewUserApp(repo repository.UserRepository) UserApp {

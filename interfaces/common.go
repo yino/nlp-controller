@@ -1,9 +1,11 @@
 package interfaces
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type BaseResp struct {
@@ -28,9 +30,9 @@ func SendResp(c *gin.Context, args ...interface{}) {
 	}
 	//配置下发日志每一条记录
 	if c.Request.Method == "GET" {
-		log.Println("[INFO][GET]request url-path is: %s, request parameter is: %v", c.Request.URL.Path, c.Request.URL.Query())
+		log.Println(fmt.Sprintf("[INFO][GET]request url-path is: %s, request parameter is: %v", c.Request.URL.Path, c.Request.URL.Query()))
 	} else if c.Request.Method == "POST" {
-		log.Println("[INFO][POST]request url-path is: %s, request parameter is: %v", c.Request.URL.Path, c.Request.PostForm)
+		log.Println(fmt.Sprintf("[INFO][POST]request url-path is: %s, request parameter is: %v", c.Request.URL.Path, c.Request.PostForm))
 	}
 
 	for _, arg := range args {
@@ -42,7 +44,7 @@ func SendResp(c *gin.Context, args ...interface{}) {
 					r.Msg = msg
 				}
 				r.Code = v
-				log.Println("[ERROR] api interface error code: %d, msg: %s", r.Code, r.Msg)
+				log.Println(fmt.Sprintf("[ERROR] api interface error code: %d, msg: %s", r.Code, r.Msg))
 			}
 		case error:
 			//pass

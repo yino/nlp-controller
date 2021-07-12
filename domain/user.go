@@ -2,25 +2,29 @@ package domain
 
 import (
 	"encoding/json"
-	"github.com/yino/nlp-controller/domain/po"
-	"github.com/yino/nlp-controller/domain/vo"
 	"time"
 
 	"github.com/yino/nlp-controller/config"
 	"github.com/yino/nlp-controller/config/log"
 	"github.com/yino/nlp-controller/domain/entity"
+	"github.com/yino/nlp-controller/domain/po"
 	"github.com/yino/nlp-controller/domain/repository"
+	"github.com/yino/nlp-controller/domain/vo"
 	"github.com/yino/nlp-controller/interfaces"
 
 	"github.com/yino/common"
 	"go.uber.org/zap"
 )
 
-// 用户领域服务
+// User 用户领域服务
 type User struct {
-	UserRepo repository.UserRepository
+	UserRepo repository.UserRepository // user 聚合工厂
 }
 
+// Add add user
+// @param user	entity *entity.User	"user 实体"
+// @return int "是否成功"
+// @return string "描述"
 func (u *User) Add(user *entity.User) (int, string) {
 	userPo := new(po.User)
 	userPo.Name = user.Name
@@ -35,11 +39,14 @@ func (u *User) Add(user *entity.User) (int, string) {
 			zap.Error(err),
 		)
 		return interfaces.ErrorRegister, err.Error()
-	} else {
-		return interfaces.StatusSuccess, ""
 	}
+	return interfaces.StatusSuccess, ""
+
 }
 
+// Edit edit user
+// @param user	*entity.User	"user 实体"
+// @return error
 func (u *User) Edit(user *entity.User) error {
 	userPo := new(po.User)
 	userPo.Name = user.Name
@@ -50,6 +57,10 @@ func (u *User) Edit(user *entity.User) error {
 	return u.UserRepo.Edit(userPo)
 }
 
+// GetUserList get user list
+// @param search map[string]interface{} "搜索 例如：["mobile"=>"xxxxx","password"=>"xxx"]"
+// @return []vo.UserVo
+// @return error
 func (u *User) GetUserList(search map[string]interface{}) ([]vo.UserVo, error) {
 
 	list, err := u.UserRepo.GetUserList(search)
@@ -70,6 +81,12 @@ func (u *User) GetUserList(search map[string]interface{}) ([]vo.UserVo, error) {
 	return userList, nil
 }
 
+// GetUserPage get user page
+// @param search map[string]interface{} "搜索 例如：["mobile"=>"xxxxx","password"=>"xxx"]"
+// @param page uint "start page"
+// @param pageSize uint "limit"
+// @return vo.UserPageVo
+// @return error
 func (u *User) GetUserPage(search map[string]interface{}, page uint, pageSize uint) (vo.UserPageVo, error) {
 	list, total, err := u.UserRepo.GetUserPage(search, page, pageSize)
 	var userPageVo vo.UserPageVo
@@ -93,16 +110,27 @@ func (u *User) GetUserPage(search map[string]interface{}, page uint, pageSize ui
 	return userPageVo, err
 }
 
-func (u *User) UserInfo(id uint64) (vo.UserVo, error) {
+// UserInfo get user info by id
+// @param id uint64 "user id"
+// @return vo.UserVo
+// @return int
+func (u *User) UserInfo(id uint64) (vo.UserVo, int) {
 	userPo, err := u.UserRepo.UserInfo(id)
+	if err != nil {
+		return vo.UserVo{}, interfaces.ErrorUserNotFound
+	}
 	return vo.UserVo{
 		Id:     userPo.ID,
 		Mobile: userPo.Mobile,
 		Name:   userPo.Name,
 		Email:  userPo.Email,
-	}, err
+	}, interfaces.StatusSuccess
 }
 
+// Login login
+// @param search map[string]interface{} "搜索 例如：["mobile"=>"xxxxx","password"=>"xxx"]"
+// return vo.UserLoginVo
+// return ret
 func (u *User) Login(search map[string]interface{}) (vo vo.UserLoginVo, ret int) {
 	user, err := u.UserRepo.FindUserInfo(search)
 	var token string
@@ -134,18 +162,41 @@ func (u *User) Login(search map[string]interface{}) (vo vo.UserLoginVo, ret int)
 		vo.Token = token
 		vo.Mobile = user.Mobile
 		vo.Name = user.Name
+	} else {
+		vo.Token = user.Token
+		vo.Mobile = user.Mobile
+		vo.Name = user.Name
 	}
 
 	return vo, interfaces.StatusSuccess
 }
 
-// AuthToken: 校验token
-func (u *User) AuthToken(token string) {
-	search := make(map[string]interface{})
-	search["token"] = token
-	user, err := u.UserRepo.FindUserInfo(search)
+// AuthToken 校验token
+func (u *User) AuthToken(token string) (vo vo.UserVo, ok bool) {
+	user, err := u.UserRepo.FindUserByToken(token)
+	if err != nil {
+		return vo, false
+	}
+
+	// token 不存在
+	if user.ID == 0 {
+		return vo, false
+	}
+
+	// 过期
+	if user.TokenExpire.Unix() < time.Now().Unix() {
+		return vo, false
+	}
+
+	vo.Mobile = user.Mobile
+	vo.Name = user.Name
+	vo.Mobile = user.Mobile
+	vo.Id = user.ID
+	return vo, true
 }
 
+// NewUserDomain new domain.User
+// return domain.User
 func NewUserDomain(repo repository.UserRepository) User {
 	return User{
 		UserRepo: repo,

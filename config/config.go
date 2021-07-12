@@ -2,10 +2,11 @@ package config
 
 import (
 	"fmt"
-	"github.com/yino/nlp-controller/infrastructure"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"os"
+
+	"github.com/yino/nlp-controller/infrastructure"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Config struct {
@@ -26,8 +27,8 @@ type Config struct {
 var Conf *Config
 
 func GetConf() *Config {
-	pwdPath, _ := os.Getwd()
-	yamlFile, err := ioutil.ReadFile(pwdPath+"/../" + infrastructure.GetEnv())
+
+	yamlFile, err := ioutil.ReadFile(infrastructure.GetEnv())
 	if err != nil {
 		fmt.Println(err.Error())
 		panic("config 文件不存在")
