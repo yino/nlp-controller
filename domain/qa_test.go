@@ -34,6 +34,7 @@ func TestQa_Page(t *testing.T) {
 	fmt.Println("len", len(list))
 	fmt.Println(list)
 }
+
 func TestQa_Add(t *testing.T) {
 
 	wg := sync.WaitGroup{}
@@ -54,4 +55,23 @@ func TestQa_Add(t *testing.T) {
 	}
 	wg.Wait()
 
+}
+
+func TestQa_Edit(t *testing.T) {
+	entityQa := new(entity.QaQuestion)
+	entityQa.Pid = 0
+	entityQa.Question = "测试10001"
+	entityQa.Answer = "测试10001"
+	entityQa.Type = 1
+	entityQa.UserId = 1
+	entityQa.ID = 380
+	fmt.Println(qa.Edit(entityQa))
+}
+
+func TestQa_FindInfo(t *testing.T) {
+	fmt.Println(qa.FindInfo(379))
+}
+
+func TestQa_Delete(t *testing.T) {
+	fmt.Println(qa.Delete(379))
 }

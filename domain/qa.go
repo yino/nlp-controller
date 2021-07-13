@@ -1,12 +1,14 @@
 package domain
 
 import (
+	"errors"
+
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/po"
 	"github.com/yino/nlp-controller/domain/repository"
 )
 
-// QaDomain qa question 领域服务
+// Qa qa question 领域服务
 type Qa struct {
 	QaRepo repository.QaQuestionRepository
 }
@@ -29,7 +31,10 @@ func (q *Qa) Add(qa *entity.QaQuestion) error {
 
 // Edit edit qa
 func (q *Qa) Edit(qa *entity.QaQuestion) error {
-	qaPo := new(po.QaQuestion)
+	qaPo, err := q.QaRepo.FindInfo(qa.ID)
+	if err != nil {
+		return err
+	}
 	qaPo.Answer = qa.Answer
 	qaPo.Question = qa.Question
 	qaPo.Pid = qa.Pid
@@ -43,16 +48,41 @@ func (q *Qa) Delete(id uint64) error {
 }
 
 // BatchInsert 批量插入数据
-func (q *Qa) BatchInsert(data []po.QaQuestion) error {
-	return q.QaRepo.BatchInsert(data)
+func (q *Qa) BatchInsert(data []entity.QaQuestion) error {
+
+	var insertData []po.QaQuestion
+
+	for _, qaEntity := range data {
+		insertData = append(insertData, po.QaQuestion{
+			Answer:   qaEntity.Answer,
+			Question: qaEntity.Question,
+			Pid:      qaEntity.Pid,
+			Type:     qaEntity.Type,
+			UserId:   qaEntity.UserId,
+		})
+	}
+	return q.QaRepo.BatchInsert(insertData)
 }
 
 // FindInfo 根据id查询info
-func (q *Qa) FindInfo(id uint64) error {
-	_, err := q.QaRepo.FindInfo(id)
-	return err
+func (q *Qa) FindInfo(id uint64) (entity.QaQuestion, error) {
+	data, err := q.QaRepo.FindInfo(id)
+	var info entity.QaQuestion
+
+	if data.ID == 0 {
+		err = errors.New("data not found")
+	}
+	if err == nil {
+		info.ID = data.ID
+		info.Question = data.Question
+		info.Answer = data.Answer
+		info.Type = data.Type
+	}
+
+	return info, err
 }
 
+//NewQaDomain new qa domain
 func NewQaDomain(repo repository.QaQuestionRepository) Qa {
 	return Qa{
 		QaRepo: repo,

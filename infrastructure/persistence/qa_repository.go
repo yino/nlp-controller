@@ -64,5 +64,6 @@ func (obj *QaQuestionRepo) BatchInsert([]po.QaQuestion) error {
 // FindInfo 查询根据ID详情
 func (obj *QaQuestionRepo) FindInfo(id uint64) (*po.QaQuestion, error) {
 	poQuestion := new(po.QaQuestion)
-	return poQuestion, nil
+	err := obj.db.Where(po.QaQuestion{ID: id}).Find(poQuestion).Error
+	return poQuestion, err
 }
