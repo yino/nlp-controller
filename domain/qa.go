@@ -3,6 +3,8 @@ package domain
 import (
 	"errors"
 
+	"github.com/yino/nlp-controller/domain/vo"
+
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/po"
 	"github.com/yino/nlp-controller/domain/repository"
@@ -13,24 +15,38 @@ type Qa struct {
 	QaRepo repository.QaQuestionRepository
 }
 
-// Page question page list
-func (q *Qa) Page(page, limit int64, search map[string]interface{}) (list []po.QaQuestion, total int64, err error) {
-	return q.QaRepo.Page(page, limit, search)
+// GetMasterQuestionPage 获取 master
+func (q *Qa) GetMasterQuestionPage(page, limit int64, search map[string]interface{}) (list vo.QaQuestionPageVo, err error) {
+	search["pid"] = 0
+	dataList, total, err := q.QaRepo.Page(page, limit, search)
+	if err == nil && len(dataList) > 0 {
+		for _, qaInfo := range dataList {
+			list.Data = append(list.Data, vo.QaQuestionVo{
+				Id:       qaInfo.ID,
+				Question: qaInfo.Question,
+				Answer:   qaInfo.Answer,
+			})
+		}
+	}
+	list.Page = page
+	list.Total = total
+	return
 }
 
-// Add add question
-func (q *Qa) Add(qa *entity.QaQuestion) error {
+// AddMaster add question
+func (q *Qa) AddMaster(qa *entity.QaQuestion) error {
 	qaPo := new(po.QaQuestion)
 	qaPo.Answer = qa.Answer
 	qaPo.Question = qa.Question
 	qaPo.Pid = qa.Pid
 	qaPo.Type = qa.Type
 	qaPo.UserId = qa.UserId
-	return q.QaRepo.Add(qaPo)
+	_, err := q.QaRepo.AddMaster(qaPo)
+	return err
 }
 
-// Edit edit qa
-func (q *Qa) Edit(qa *entity.QaQuestion) error {
+// EditMaster edit qa
+func (q *Qa) EditMaster(qa *entity.QaQuestion) error {
 	qaPo, err := q.QaRepo.FindInfo(qa.ID)
 	if err != nil {
 		return err
@@ -39,47 +55,99 @@ func (q *Qa) Edit(qa *entity.QaQuestion) error {
 	qaPo.Question = qa.Question
 	qaPo.Pid = qa.Pid
 	qaPo.Type = qa.Type
-	return q.QaRepo.Edit(qaPo)
+	return q.QaRepo.EditMaster(qaPo)
 }
 
 // Delete delete question
 func (q *Qa) Delete(id uint64) error {
+	qaPo, err := q.QaRepo.FindInfo(id)
+	if qaPo.ID == 0 {
+		return errors.New("data not found")
+	}
+	if err != nil {
+		return err
+	}
 	return q.QaRepo.Delete(id)
 }
 
-// BatchInsert 批量插入数据
-func (q *Qa) BatchInsert(data []entity.QaQuestion) error {
-
-	var insertData []po.QaQuestion
-
-	for _, qaEntity := range data {
-		insertData = append(insertData, po.QaQuestion{
-			Answer:   qaEntity.Answer,
-			Question: qaEntity.Question,
-			Pid:      qaEntity.Pid,
-			Type:     qaEntity.Type,
-			UserId:   qaEntity.UserId,
-		})
-	}
-	return q.QaRepo.BatchInsert(insertData)
-}
-
 // FindInfo 根据id查询info
-func (q *Qa) FindInfo(id uint64) (entity.QaQuestion, error) {
+func (q *Qa) FindInfo(id uint64) (vo.QaQuestionInfoVo, error) {
 	data, err := q.QaRepo.FindInfo(id)
-	var info entity.QaQuestion
+	var info vo.QaQuestionInfoVo
 
 	if data.ID == 0 {
 		err = errors.New("data not found")
 	}
-	if err == nil {
-		info.ID = data.ID
-		info.Question = data.Question
-		info.Answer = data.Answer
-		info.Type = data.Type
+	if err != nil {
+		return info, err
 	}
+	info.Id = data.ID
+	info.Question = data.Question
+	info.Answer = data.Answer
 
+	slaveQuestionList, _ := q.QaRepo.GetSlaveList(data.ID)
+	if err == nil && len(slaveQuestionList) > 0 {
+		for _, slaveQuestion := range slaveQuestionList {
+			info.SimilarQuestion = append(info.SimilarQuestion, vo.QaQuestionVo{
+				Id:       slaveQuestion.ID,
+				Question: slaveQuestion.Question,
+				Answer:   slaveQuestion.Answer,
+			})
+		}
+	}
 	return info, err
+}
+
+// Add add master question and slave questions
+func (q *Qa) Add(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQuestion) error {
+	qaPo := new(po.QaQuestion)
+	qaPo.Answer = masterQuestion.Answer
+	qaPo.Question = masterQuestion.Question
+	qaPo.Pid = masterQuestion.Pid
+	qaPo.Type = masterQuestion.Type
+	qaPo.UserId = masterQuestion.UserId
+
+	var qaPoSlaveList []po.QaQuestion
+	for _, question := range slaveQuestion {
+		qaPoSlaveList = append(qaPoSlaveList, po.QaQuestion{
+			Question: question.Question,
+			Answer:   question.Answer,
+			Type:     2,
+			UserId:   question.UserId,
+			Pid:      0,
+		})
+	}
+	return q.QaRepo.Add(qaPo, qaPoSlaveList)
+}
+
+// Edit Edit master question and slave questions
+func (q *Qa) Edit(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQuestion) error {
+	qaPo, err := q.QaRepo.FindInfo(masterQuestion.ID)
+	if qaPo.ID == 0 {
+		return errors.New("data not found")
+	}
+	if err != nil {
+		return err
+	}
+	qaPo.Answer = masterQuestion.Answer
+	qaPo.Question = masterQuestion.Question
+	qaPo.Pid = masterQuestion.Pid
+	qaPo.Type = 1
+	qaPo.UserId = masterQuestion.UserId
+	qaPo.ID = masterQuestion.ID
+
+	var qaPoSlaveList []po.QaQuestion
+	for _, question := range slaveQuestion {
+		qaPoSlaveList = append(qaPoSlaveList, po.QaQuestion{
+			Question: question.Question,
+			Answer:   question.Answer,
+			Type:     2,
+			UserId:   question.UserId,
+			Pid:      qaPo.ID,
+			ID:       question.ID,
+		})
+	}
+	return q.QaRepo.Edit(qaPo, qaPoSlaveList)
 }
 
 //NewQaDomain new qa domain

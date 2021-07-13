@@ -6,11 +6,10 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/yino/nlp-controller/domain/entity"
-
 	"github.com/yino/nlp-controller/config"
 	"github.com/yino/nlp-controller/config/log"
 	"github.com/yino/nlp-controller/domain"
+	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/infrastructure/persistence"
 )
 
@@ -26,16 +25,14 @@ func init() {
 }
 func TestQa_Page(t *testing.T) {
 	search := make(map[string]interface{})
-	list, total, err := qa.Page(2, 10, search)
+	vo, err := qa.GetMasterQuestionPage(2, 10, search)
 	if err != nil {
 		fmt.Println("获取page 失败", err)
 	}
-	fmt.Println("total", total)
-	fmt.Println("len", len(list))
-	fmt.Println(list)
+	fmt.Println(vo)
 }
 
-func TestQa_Add(t *testing.T) {
+func TestQa_BashAdd(t *testing.T) {
 
 	wg := sync.WaitGroup{}
 	for i := 0; i <= 500; i++ {
@@ -48,13 +45,46 @@ func TestQa_Add(t *testing.T) {
 		entityQa.UserId = 1
 
 		go func() {
-			err := qa.Add(entityQa)
+			err := qa.AddMaster(entityQa)
 			fmt.Println(err)
 			wg.Done()
 		}()
 	}
 	wg.Wait()
 
+}
+func TestQa_Add(t *testing.T) {
+
+	entityQa := new(entity.QaQuestion)
+	entityQa.Pid = 0
+	entityQa.Question = "测试10086"
+	entityQa.Answer = "测试10086"
+	entityQa.Type = 1
+	entityQa.UserId = 1
+	fmt.Println(entityQa)
+	var slaveQuestion []entity.QaQuestion
+
+	entitySlaveQa := entity.QaQuestion{}
+	entitySlaveQa.Pid = 0
+	entitySlaveQa.Question = "测试1008611"
+	entitySlaveQa.Answer = "测试1008611"
+	entitySlaveQa.Type = 1
+	entitySlaveQa.UserId = 1
+	slaveQuestion = append(slaveQuestion, entitySlaveQa)
+	slaveQuestion = append(slaveQuestion, entitySlaveQa)
+	slaveQuestion = append(slaveQuestion, entitySlaveQa)
+	err := qa.Add(entityQa, slaveQuestion)
+	fmt.Println(" error ", err)
+}
+func TestQa_MasterEdit(t *testing.T) {
+	entityQa := new(entity.QaQuestion)
+	entityQa.Pid = 0
+	entityQa.Question = "测试10001"
+	entityQa.Answer = "测试10001"
+	entityQa.Type = 1
+	entityQa.UserId = 1
+	entityQa.ID = 380
+	fmt.Println(qa.EditMaster(entityQa))
 }
 
 func TestQa_Edit(t *testing.T) {
@@ -64,12 +94,13 @@ func TestQa_Edit(t *testing.T) {
 	entityQa.Answer = "测试10001"
 	entityQa.Type = 1
 	entityQa.UserId = 1
-	entityQa.ID = 380
-	fmt.Println(qa.Edit(entityQa))
-}
+	entityQa.ID = 2566
 
+	var slaveQuestion []entity.QaQuestion
+	fmt.Println(qa.Edit(entityQa, slaveQuestion))
+}
 func TestQa_FindInfo(t *testing.T) {
-	fmt.Println(qa.FindInfo(379))
+	fmt.Println(qa.FindInfo(380))
 }
 
 func TestQa_Delete(t *testing.T) {

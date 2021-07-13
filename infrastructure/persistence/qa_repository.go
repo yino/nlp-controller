@@ -26,6 +26,10 @@ func (obj *QaQuestionRepo) Page(page, limit int64, search map[string]interface{}
 		countDb.Where("user_id = ?", userID)
 		db.Where("user_id = ?", userID)
 	}
+	if pid, ok := search["pid"]; ok {
+		countDb.Where("pid = ?", pid)
+		db.Where("pid = ?", pid)
+	}
 
 	if page > 0 {
 		page = page - 1
@@ -38,14 +42,14 @@ func (obj *QaQuestionRepo) Page(page, limit int64, search map[string]interface{}
 	return
 }
 
-// Add add
-func (obj *QaQuestionRepo) Add(question *po.QaQuestion) error {
-	return obj.db.Save(question).Error
-
+// AddMaster add master question
+func (obj *QaQuestionRepo) AddMaster(question *po.QaQuestion) (uint64, error) {
+	err := obj.db.Save(question).Error
+	return question.ID, err
 }
 
-// Edit edit
-func (obj *QaQuestionRepo) Edit(question *po.QaQuestion) error {
+// EditMaster edit maser question
+func (obj *QaQuestionRepo) EditMaster(question *po.QaQuestion) error {
 	question.UpdatedAt = time.Now()
 	return obj.db.Where("id = ?", question.ID).Save(question).Error
 }
@@ -66,4 +70,107 @@ func (obj *QaQuestionRepo) FindInfo(id uint64) (*po.QaQuestion, error) {
 	poQuestion := new(po.QaQuestion)
 	err := obj.db.Where(po.QaQuestion{ID: id}).Find(poQuestion).Error
 	return poQuestion, err
+}
+
+// GetSlaveList 获取相似问题
+func (obj *QaQuestionRepo) GetSlaveList(pid uint64) ([]po.QaQuestion, error) {
+	var list []po.QaQuestion
+	err := obj.db.Where("pid = ?", pid).Find(&list).Error
+	return list, err
+}
+
+// Add add  question
+func (obj *QaQuestionRepo) Add(question *po.QaQuestion, slaveQuestion []po.QaQuestion) error {
+	return obj.db.Transaction(func(tx *gorm.DB) error {
+		// master add
+		if err := obj.db.Save(question).Error; err != nil {
+			return err
+		}
+
+		// slave add
+		var insertSlaveData []po.QaQuestion
+		for _, slaveItem := range slaveQuestion {
+			item := slaveItem
+			item.Pid = question.ID
+			insertSlaveData = append(insertSlaveData, item)
+		}
+		if len(insertSlaveData) > 0 {
+			if err := obj.db.Create(&insertSlaveData).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+// Edit edit  question
+func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQuestion) error {
+	//更新、添加、删除的slave question
+	var updateQuestionList, insertQuestionList, questionList []po.QaQuestion
+	var deleteQuestionList []uint64
+	if len(slaveQuestion) > 0 {
+		obj.db.Where("pid = ?", question.ID).Find(&questionList)
+
+		// 如果没有slave question list的时候 则全部为插入操作
+		if len(questionList) == 0 {
+			insertQuestionList = slaveQuestion
+		} else {
+			slaveQuestionMap := make(map[uint64]po.QaQuestion)
+			// 将questionList 转换为 map[id]struct 牺牲空间，减少执行次数
+			// 拼接 add  slice
+			for _, question := range slaveQuestion {
+				if question.ID == 0 {
+					// insert
+					insertQuestionList = append(insertQuestionList, question)
+					continue
+				}
+				slaveQuestionMap[question.ID] = question
+			}
+			// 拼接 delete and update question
+			for _, question := range questionList {
+				// delete
+				dbQuestion, ok := slaveQuestionMap[question.ID]
+				if !ok {
+					deleteQuestionList = append(deleteQuestionList, question.ID)
+					continue
+				}
+				// update
+				if question.Question != dbQuestion.Question {
+					updateQuestionList = append(updateQuestionList, question)
+				}
+			}
+		}
+	}
+
+	return obj.db.Transaction(func(tx *gorm.DB) error {
+		err := obj.EditMaster(question)
+		if err != nil {
+			return err
+		}
+
+		// insert
+		if len(insertQuestionList) > 0 {
+			if err := obj.db.Create(&insertQuestionList).Error; err != nil {
+				return err
+			}
+		}
+
+		// delete
+		if len(deleteQuestionList) > 0 {
+			if err := obj.db.Where("id in ?", deleteQuestionList).Delete(po.QaQuestion{}).Error; err != nil {
+				return nil
+			}
+		}
+
+		// update
+		if len(updateQuestionList) > 0 {
+			for _, updateQuestionItem := range updateQuestionList {
+				if err := obj.EditMaster(&updateQuestionItem); err != nil {
+					return err
+				}
+			}
+		}
+
+		return nil
+	})
 }
