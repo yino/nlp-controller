@@ -2,7 +2,6 @@ package domain
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/yino/nlp-controller/domain/vo"
 
@@ -85,6 +84,7 @@ func (q *Qa) FindInfo(id uint64) (vo.QaQuestionInfoVo, error) {
 	info.Id = data.ID
 	info.Question = data.Question
 	info.Answer = data.Answer
+	info.UserId = data.UserId
 
 	slaveQuestionList, _ := q.QaRepo.GetSlaveList(data.ID)
 	if err == nil && len(slaveQuestionList) > 0 {
@@ -104,8 +104,8 @@ func (q *Qa) Add(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQue
 	qaPo := new(po.QaQuestion)
 	qaPo.Answer = masterQuestion.Answer
 	qaPo.Question = masterQuestion.Question
-	qaPo.Pid = masterQuestion.Pid
-	qaPo.Type = masterQuestion.Type
+	qaPo.Pid = 0
+	qaPo.Type = 1
 	qaPo.UserId = masterQuestion.UserId
 
 	var qaPoSlaveList []po.QaQuestion
@@ -121,7 +121,7 @@ func (q *Qa) Add(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQue
 	return q.QaRepo.Add(qaPo, qaPoSlaveList)
 }
 
-// Edit Edit master question and slave questions
+// Edit master question and slave questions
 func (q *Qa) Edit(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQuestion) error {
 	qaPo, err := q.QaRepo.FindInfo(masterQuestion.ID)
 	if qaPo.ID == 0 {
@@ -148,7 +148,6 @@ func (q *Qa) Edit(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQu
 			ID:       question.ID,
 		})
 	}
-	fmt.Println(qaPoSlaveList)
 	return q.QaRepo.Edit(qaPo, qaPoSlaveList)
 }
 

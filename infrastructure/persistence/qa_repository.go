@@ -116,7 +116,7 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 	//更新、添加、删除的slave question
 	var updateQuestionList, insertQuestionList, questionList []po.QaQuestion
 	var deleteQuestionList []uint64
-	obj.db.Where("pid = ?", question.ID).Find(&questionList)
+	obj.db.Where("pid = ?", question.ID).Where("user_id = ?", question.UserId).Find(&questionList)
 	if len(slaveQuestion) > 0 {
 		// 如果没有slave question list的时候 则全部为插入操作
 		if len(questionList) == 0 {
@@ -125,25 +125,25 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 			slaveQuestionMap := make(map[uint64]po.QaQuestion)
 			// 将questionList 转换为 map[id]struct 牺牲空间，减少执行次数
 			// 拼接 add  slice
-			for _, question := range slaveQuestion {
-				if question.ID == 0 {
+			for _, questionPo := range slaveQuestion {
+				if questionPo.ID == 0 {
 					// insert
-					insertQuestionList = append(insertQuestionList, question)
+					insertQuestionList = append(insertQuestionList, questionPo)
 					continue
 				}
-				slaveQuestionMap[question.ID] = question
+				slaveQuestionMap[questionPo.ID] = questionPo
 			}
 			// 拼接 delete and update question
-			for _, question := range questionList {
+			for _, questionPo := range questionList {
 				// delete
-				dbQuestion, ok := slaveQuestionMap[question.ID]
+				dbQuestion, ok := slaveQuestionMap[questionPo.ID]
 				if !ok {
-					deleteQuestionList = append(deleteQuestionList, question.ID)
+					deleteQuestionList = append(deleteQuestionList, questionPo.ID)
 					continue
 				}
 				// update
-				if question.Question != dbQuestion.Question {
-					updateQuestionList = append(updateQuestionList, question)
+				if questionPo.Question != dbQuestion.Question {
+					updateQuestionList = append(updateQuestionList, questionPo)
 				}
 			}
 		}

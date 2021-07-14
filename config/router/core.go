@@ -9,29 +9,33 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// RegisterCoreRouter 注册 core路由
 func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 	userApp := app.NewUserApp(repo.User)
-	UserInterFace := corp.NewUsersInterface(userApp)
+	userInterFace := corp.NewUsersInterface(userApp)
+
+	qaInterFace := corp.NewQaInterface(app.NewQaApp(repo.Qa))
+
 	v1 := c.Group("v1")
 	{
 		core := v1.Group("core")
 		{
 			// 登录注册
-			core.POST("/login", UserInterFace.HandlerUserLogin)
-			core.POST("/register", UserInterFace.HandlerUserRegister)
+			core.POST("/login", userInterFace.HandlerUserLogin)
+			core.POST("/register", userInterFace.HandlerUserRegister)
 
 			core.Use(middleware.CorpAuthTokenMiddleware(userApp))
 			{
 				// user
-				core.GET("/user/info", UserInterFace.HandlerUserInfo)
-				core.GET("/user/edit", UserInterFace.HandlerUserEdit)
+				core.GET("/user/info", userInterFace.HandlerUserInfo)
+				core.GET("/user/edit", userInterFace.HandlerUserEdit)
 
 				// question
-				//core.GET("/question/index", interfaces.HandlerQuestionPage)
-				//core.POST("/question/add", interfaces.HandlerQuestionAdd)
-				//core.POST("/question/edit", interfaces.HandlerQuestionEdit)
-				//core.GET("/question/delete", interfaces.HandlerQuestionDelete)
-				//core.GET("/question/train", interfaces.HandlerQuestionTrain)
+				core.GET("/question/index", qaInterFace.HandlerQuestionPage)
+				core.POST("/question/add", qaInterFace.HandlerQuestionAdd)
+				core.POST("/question/edit", qaInterFace.HandlerQuestionEdit)
+				core.GET("/question/delete", qaInterFace.HandlerQuestionDelete)
+				core.GET("/question/train", qaInterFace.HandlerQuestionTrain)
 			}
 		}
 	}

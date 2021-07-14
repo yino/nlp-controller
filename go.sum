@@ -179,6 +179,7 @@ github.com/yino/common v0.0.0-20210630065434-95018f9191dd h1:04s7HVhzTMKMdMcqX6j
 github.com/yino/common v0.0.0-20210630065434-95018f9191dd/go.mod h1:wFcNh2E5o+vI3rLK+eaSxxxCSZKsKkgC+yuEpUGm7ZI=
 github.com/yino/common v0.0.0-20210707082107-f390e94a5447 h1:ekFwmjRWXQGYwVWv4ZU7qpJWxBVD9hIDCSKAdUiTEiE=
 github.com/yino/common v0.0.0-20210707082107-f390e94a5447/go.mod h1:wFcNh2E5o+vI3rLK+eaSxxxCSZKsKkgC+yuEpUGm7ZI=
+github.com/yino/nlp v0.0.0-20210621032840-7e0edec3a3ee h1:au3XuwJGT4pPPcwZxt2z6Yx2PLzFfkWeIfUOEfHyC0U=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 go.uber.org/atomic v1.7.0 h1:ADUqmZGgLDDfbSL9ZmPxKTybcoEYHgpYfELNoN+7hsw=

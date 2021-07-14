@@ -27,6 +27,7 @@ type QaQuestionVo struct {
 	Id       uint64 `json:"id"`
 	Question string `json:"question"`
 	Answer   string `json:"answer"`
+	UserId   uint64 `json:"user_id"`
 }
 
 type QaQuestionPageVo struct {
