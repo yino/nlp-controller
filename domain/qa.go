@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/yino/nlp-controller/domain/vo"
 
@@ -147,6 +148,7 @@ func (q *Qa) Edit(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQu
 			ID:       question.ID,
 		})
 	}
+	fmt.Println(qaPoSlaveList)
 	return q.QaRepo.Edit(qaPo, qaPoSlaveList)
 }
 

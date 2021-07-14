@@ -90,17 +90,28 @@ func TestQa_MasterEdit(t *testing.T) {
 func TestQa_Edit(t *testing.T) {
 	entityQa := new(entity.QaQuestion)
 	entityQa.Pid = 0
-	entityQa.Question = "测试10001"
-	entityQa.Answer = "测试10001"
+	entityQa.Question = "测试100013"
+	entityQa.Answer = "测试100013"
 	entityQa.Type = 1
 	entityQa.UserId = 1
 	entityQa.ID = 2566
 
 	var slaveQuestion []entity.QaQuestion
-	fmt.Println(qa.Edit(entityQa, slaveQuestion))
+	var testQaEnt entity.QaQuestion
+	testQaEnt.ID = 0
+	testQaEnt.Question = "test2"
+	testQaEnt.Answer = "test2"
+	testQaEnt.Pid = 2566
+	slaveQuestion = append(slaveQuestion, testQaEnt)
+	err := qa.Edit(entityQa, slaveQuestion)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("修改成功")
+	}
 }
 func TestQa_FindInfo(t *testing.T) {
-	fmt.Println(qa.FindInfo(380))
+	fmt.Println(qa.FindInfo(2566))
 }
 
 func TestQa_Delete(t *testing.T) {

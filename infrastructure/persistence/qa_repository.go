@@ -56,8 +56,16 @@ func (obj *QaQuestionRepo) EditMaster(question *po.QaQuestion) error {
 
 //Delete delete
 func (obj *QaQuestionRepo) Delete(id uint64) error {
-
-	return obj.db.Where("id = ?", id).Delete(&po.QaQuestion{}).Error
+	return obj.db.Transaction(func(tx *gorm.DB) error {
+		deletQa := po.QaQuestion{}
+		if err := tx.Where("id = ?", id).Delete(&deletQa).Error; err != nil {
+			return err
+		}
+		if err := tx.Where("pid = ?", id).Delete(&deletQa).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 }
 
 // BatchInsert 批量插入
@@ -108,9 +116,8 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 	//更新、添加、删除的slave question
 	var updateQuestionList, insertQuestionList, questionList []po.QaQuestion
 	var deleteQuestionList []uint64
+	obj.db.Where("pid = ?", question.ID).Find(&questionList)
 	if len(slaveQuestion) > 0 {
-		obj.db.Where("pid = ?", question.ID).Find(&questionList)
-
 		// 如果没有slave question list的时候 则全部为插入操作
 		if len(questionList) == 0 {
 			insertQuestionList = slaveQuestion
@@ -140,32 +147,37 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 				}
 			}
 		}
+	} else {
+		for _, slaveQuestionItem := range questionList {
+			deleteQuestionList = append(deleteQuestionList, slaveQuestionItem.ID)
+		}
 	}
-
 	return obj.db.Transaction(func(tx *gorm.DB) error {
-		err := obj.EditMaster(question)
-		if err != nil {
+
+		question.UpdatedAt = time.Now()
+		if err := tx.Where("id = ?", question.ID).Save(question).Error; err != nil {
 			return err
 		}
 
 		// insert
 		if len(insertQuestionList) > 0 {
-			if err := obj.db.Create(&insertQuestionList).Error; err != nil {
+			if err := tx.Create(&insertQuestionList).Error; err != nil {
 				return err
 			}
 		}
 
 		// delete
 		if len(deleteQuestionList) > 0 {
-			if err := obj.db.Where("id in ?", deleteQuestionList).Delete(po.QaQuestion{}).Error; err != nil {
-				return nil
+			deleteQaPo := po.QaQuestion{}
+			if err := tx.Where("id in ?", deleteQuestionList).Delete(&deleteQaPo).Error; err != nil {
+				return err
 			}
 		}
 
 		// update
 		if len(updateQuestionList) > 0 {
 			for _, updateQuestionItem := range updateQuestionList {
-				if err := obj.EditMaster(&updateQuestionItem); err != nil {
+				if err := tx.Where("id = ?", updateQuestionItem.ID).Save(&updateQuestionItem).Error; err != nil {
 					return err
 				}
 			}
