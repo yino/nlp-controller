@@ -34,6 +34,7 @@ func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 				core.GET("/question/index", qaInterFace.HandlerQuestionPage)
 				core.POST("/question/add", qaInterFace.HandlerQuestionAdd)
 				core.POST("/question/edit", qaInterFace.HandlerQuestionEdit)
+				core.GET("/question/info", qaInterFace.HandlerQuestionInfo)
 				core.GET("/question/delete", qaInterFace.HandlerQuestionDelete)
 				core.GET("/question/train", qaInterFace.HandlerQuestionTrain)
 			}

@@ -90,19 +90,38 @@ func TestQa_MasterEdit(t *testing.T) {
 func TestQa_Edit(t *testing.T) {
 	entityQa := new(entity.QaQuestion)
 	entityQa.Pid = 0
-	entityQa.Question = "测试100013"
-	entityQa.Answer = "测试100013"
+	entityQa.Question = "test11"
+	entityQa.Answer = "test11"
 	entityQa.Type = 1
 	entityQa.UserId = 1
-	entityQa.ID = 2566
+	entityQa.ID = 8052
 
 	var slaveQuestion []entity.QaQuestion
 	var testQaEnt entity.QaQuestion
-	testQaEnt.ID = 0
-	testQaEnt.Question = "test2"
-	testQaEnt.Answer = "test2"
-	testQaEnt.Pid = 2566
+	testQaEnt.ID = 10868
+	testQaEnt.Question = "test slave 32"
+	testQaEnt.Answer = "test slave 32"
+	testQaEnt.Pid = 8052
 	slaveQuestion = append(slaveQuestion, testQaEnt)
+
+	testQaEnt.ID = 10869
+	testQaEnt.Question = "test slave 22"
+	testQaEnt.Answer = "test slave 22"
+	testQaEnt.Pid = 8052
+	slaveQuestion = append(slaveQuestion, testQaEnt)
+
+	testQaEnt.ID = 10870
+	testQaEnt.Question = "test slave 12"
+	testQaEnt.Answer = "test slave 12"
+	testQaEnt.Pid = 8052
+	slaveQuestion = append(slaveQuestion, testQaEnt)
+
+	testQaEnt.ID = 10871
+	testQaEnt.Question = "test slave 02"
+	testQaEnt.Answer = "test slave 02"
+	testQaEnt.Pid = 8052
+	slaveQuestion = append(slaveQuestion, testQaEnt)
+
 	err := qa.Edit(entityQa, slaveQuestion)
 	if err != nil {
 		fmt.Println(err)

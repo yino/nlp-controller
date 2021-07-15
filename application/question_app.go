@@ -65,6 +65,7 @@ func (qa *QaQuestionApp) Edit(uid uint64, req vo.QaEditReq) (int, string) {
 		slaveQuestion.UserId = uid
 		slaveQuestion.Question = question.Question
 		slaveQuestion.Answer = req.Answer
+		slaveQuestion.ID = question.ID
 		qaPoSlaveList = append(qaPoSlaveList, slaveQuestion)
 	}
 	err = qa.domain.Edit(qaMaster, qaPoSlaveList)
@@ -89,6 +90,20 @@ func (qa *QaQuestionApp) Delete(uid, id uint64) (int, string) {
 		return interfaces.ErrorDeleteData, err.Error()
 	}
 	return interfaces.StatusSuccess, ""
+}
+
+// Info 删除
+func (qa *QaQuestionApp) Info(uid, id uint64) (int, vo.QaQuestionInfoVo) {
+	infoVo, err := qa.domain.FindInfo(id)
+	if err != nil {
+		return interfaces.ErrorGetData, infoVo
+	}
+
+	if infoVo.UserId != uid {
+		return interfaces.ErrorDataNoteUser, infoVo
+	}
+
+	return interfaces.StatusSuccess, infoVo
 }
 
 // Match 检索

@@ -30,6 +30,7 @@ func (q *Qa) GetMasterQuestionPage(page, limit int64, search map[string]interfac
 	}
 	list.Page = page
 	list.Total = total
+	list.PageSize = limit
 	return
 }
 
@@ -132,18 +133,13 @@ func (q *Qa) Edit(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQu
 	}
 	qaPo.Answer = masterQuestion.Answer
 	qaPo.Question = masterQuestion.Question
-	qaPo.Pid = masterQuestion.Pid
-	qaPo.Type = 1
-	qaPo.UserId = masterQuestion.UserId
-	qaPo.ID = masterQuestion.ID
-
 	var qaPoSlaveList []po.QaQuestion
 	for _, question := range slaveQuestion {
 		qaPoSlaveList = append(qaPoSlaveList, po.QaQuestion{
 			Question: question.Question,
 			Answer:   question.Answer,
 			Type:     2,
-			UserId:   question.UserId,
+			UserId:   qaPo.UserId,
 			Pid:      qaPo.ID,
 			ID:       question.ID,
 		})

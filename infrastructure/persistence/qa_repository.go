@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/yino/nlp-controller/domain/po"
@@ -118,6 +119,8 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 	var deleteQuestionList []uint64
 	obj.db.Where("pid = ?", question.ID).Where("user_id = ?", question.UserId).Find(&questionList)
 	if len(slaveQuestion) > 0 {
+		fmt.Println("len(questionList)", len(questionList))
+		fmt.Println("slaveQuestion", slaveQuestion)
 		// 如果没有slave question list的时候 则全部为插入操作
 		if len(questionList) == 0 {
 			insertQuestionList = slaveQuestion
@@ -136,14 +139,14 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 			// 拼接 delete and update question
 			for _, questionPo := range questionList {
 				// delete
-				dbQuestion, ok := slaveQuestionMap[questionPo.ID]
+				submitQuestion, ok := slaveQuestionMap[questionPo.ID]
 				if !ok {
 					deleteQuestionList = append(deleteQuestionList, questionPo.ID)
 					continue
 				}
 				// update
-				if questionPo.Question != dbQuestion.Question {
-					updateQuestionList = append(updateQuestionList, questionPo)
+				if questionPo.Question != submitQuestion.Question {
+					updateQuestionList = append(updateQuestionList, submitQuestion)
 				}
 			}
 		}
@@ -152,6 +155,10 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 			deleteQuestionList = append(deleteQuestionList, slaveQuestionItem.ID)
 		}
 	}
+
+	fmt.Println("insert", insertQuestionList)
+	fmt.Println("update", updateQuestionList)
+	fmt.Println("delete", deleteQuestionList)
 	return obj.db.Transaction(func(tx *gorm.DB) error {
 
 		question.UpdatedAt = time.Now()
@@ -169,7 +176,7 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 		// delete
 		if len(deleteQuestionList) > 0 {
 			deleteQaPo := po.QaQuestion{}
-			if err := tx.Where("id in ?", deleteQuestionList).Delete(&deleteQaPo).Error; err != nil {
+			if err := tx.Where("id in ?", deleteQuestionList).Where("user_id = ?", question.UserId).Delete(&deleteQaPo).Error; err != nil {
 				return err
 			}
 		}
@@ -177,7 +184,7 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 		// update
 		if len(updateQuestionList) > 0 {
 			for _, updateQuestionItem := range updateQuestionList {
-				if err := tx.Where("id = ?", updateQuestionItem.ID).Save(&updateQuestionItem).Error; err != nil {
+				if err := tx.Model(&updateQuestionItem).Where("id = ?", updateQuestionItem.ID).Where("user_id = ?", question.UserId).Updates(po.QaQuestion{Question: updateQuestionItem.Question, Answer: question.Answer}).Error; err != nil {
 					return err
 				}
 			}
