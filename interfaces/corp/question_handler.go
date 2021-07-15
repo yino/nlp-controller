@@ -67,6 +67,7 @@ func (q *Qa) HandlerQuestionDelete(c *gin.Context) {
 	id, err := strconv.ParseUint(reqID, 10, 64)
 	if err != nil || id == 0 {
 		interfaces.SendResp(c, interfaces.ErrorParams, err.Error())
+		return
 	}
 	ret, msg := q.qa.Delete(GetUid(c), id)
 	interfaces.SendResp(c, ret, msg)
@@ -79,14 +80,15 @@ func (q *Qa) HandlerQuestionInfo(c *gin.Context) {
 	id, err := strconv.ParseUint(reqID, 10, 64)
 	if err != nil || id == 0 {
 		interfaces.SendResp(c, interfaces.ErrorParams, err.Error())
+		return
 	}
 	ret, data := q.qa.Info(GetUid(c), id)
 	if ret != interfaces.StatusSuccess {
 		interfaces.SendResp(c, ret)
 		return
+
 	}
 	interfaces.SendResp(c, ret, data)
-	return
 }
 
 // HandlerQuestionTrain training qa model

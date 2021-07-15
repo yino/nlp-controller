@@ -24,12 +24,12 @@ func (obj *QaQuestionRepo) Page(page, limit int64, search map[string]interface{}
 	countDb := obj.db
 	db := obj.db
 	if userID, ok := search["user_id"]; ok {
-		countDb.Where("user_id = ?", userID)
-		db.Where("user_id = ?", userID)
+		countDb = countDb.Where("user_id = ?", userID)
+		db = db.Where("user_id = ?", userID)
 	}
 	if pid, ok := search["pid"]; ok {
-		countDb.Where("pid = ?", pid)
-		db.Where("pid = ?", pid)
+		countDb = countDb.Where("pid = ?", pid)
+		db = db.Where("pid = ?", pid)
 	}
 
 	if page > 0 {

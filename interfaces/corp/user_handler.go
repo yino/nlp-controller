@@ -31,6 +31,7 @@ func (u *Users) HandlerUserInfo(c *gin.Context) {
 	id := c.GetUint64("uid")
 	if id == 0 {
 		interfaces.SendResp(c, interfaces.ErrorToken)
+		return
 	}
 	vo, ret := u.us.UserInfo(id)
 	interfaces.SendResp(c, vo, ret)
@@ -70,6 +71,7 @@ func (u *Users) HandlerUserLogin(c *gin.Context) {
 	vo, ret := u.us.Login(search)
 	if ret != interfaces.StatusSuccess {
 		interfaces.SendResp(c, ret)
+		return
 	}
 	interfaces.SendResp(c, vo, ret)
 }
@@ -100,6 +102,7 @@ func (u *Users) HandlerUserRegister(c *gin.Context) {
 	ret, errMsg := u.us.Add(userEntity)
 	if ret != interfaces.StatusSuccess {
 		interfaces.SendResp(c, ret, errMsg)
+		return
 	}
 	interfaces.SendResp(c, ret)
 }
