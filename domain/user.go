@@ -195,6 +195,26 @@ func (u *User) AuthToken(token string) (vo vo.UserVo, ok bool) {
 	return vo, true
 }
 
+// CreateAppKey create app key
+func (u *User) CreateAppKey(uid, createType string) error {
+	return nil
+}
+
+// AppKeyPage get app key page
+func (u *User) AppKeyPage(createType string) {
+
+}
+
+// AuthAppKey auth ak as
+func (u *User) AuthAppKey(ak string, as string) error {
+	return nil
+}
+
+// DeleteAppKey delete ak
+func (u *User) DeleteAppKey(id uint64) error {
+	return nil
+}
+
 // NewUserDomain new domain.User
 // return domain.User
 func NewUserDomain(repo repository.UserRepository) User {

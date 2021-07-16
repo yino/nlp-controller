@@ -39,3 +39,9 @@ type QaEditReq struct {
 	Answer        string          `json:"answer" binding:"required"`
 	SlaveQuestion []slaveQuestion `json:"slave_question" bind:"required"`
 }
+
+// AuthAk auth ak as
+type AuthAk struct {
+	Ak string `json:"appKey" binding:"required"`
+	As string `json:"appSecret" binding:"required"`
+}
