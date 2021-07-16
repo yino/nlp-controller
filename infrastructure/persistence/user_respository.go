@@ -10,15 +10,17 @@ import (
 	"gorm.io/gorm"
 )
 
+// UserRepo user repo
 type UserRepo struct {
 	db *gorm.DB
 }
 
-// NewUserRepository： user test
+// NewUserRepository user test
 func NewUserRepository(db *gorm.DB) *UserRepo {
 	return &UserRepo{db: db}
 }
 
+// Add add
 func (obj *UserRepo) Add(user *po.User) error {
 	var count int64
 	err := obj.db.Model(&po.User{}).Where("mobile = ?", user.Mobile).Count(&count).Error
@@ -31,10 +33,14 @@ func (obj *UserRepo) Add(user *po.User) error {
 	res := obj.db.Create(user)
 	return res.Error
 }
+
+// Edit edit
 func (obj *UserRepo) Edit(user *po.User) error {
 	res := obj.db.Where("id = ?", user.ID).Save(user)
 	return res.Error
 }
+
+// GetUserList get list
 func (obj *UserRepo) GetUserList(search map[string]interface{}) ([]po.User, error) {
 	var userList []po.User
 	db := obj.db
@@ -48,6 +54,7 @@ func (obj *UserRepo) GetUserList(search map[string]interface{}) ([]po.User, erro
 	return userList, nil
 }
 
+// GetUserPage get page
 func (obj *UserRepo) GetUserPage(search map[string]interface{}, page uint, pageSize uint) (datList []po.User, total uint, err error) {
 	var count int64
 	db := obj.db
@@ -67,6 +74,8 @@ func (obj *UserRepo) GetUserPage(search map[string]interface{}, page uint, pageS
 
 	return
 }
+
+// UserInfo user info
 func (obj *UserRepo) UserInfo(id uint64) (*po.User, error) {
 
 	user := new(po.User)
@@ -75,6 +84,7 @@ func (obj *UserRepo) UserInfo(id uint64) (*po.User, error) {
 	return user, res.Error
 }
 
+// FindUserInfo find user info
 func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*po.User, error) {
 	whereUser := new(po.User)
 	user := new(po.User)
@@ -92,6 +102,7 @@ func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*po.User, erro
 	return user, res.Error
 }
 
+// FindUserByToken find user info by token
 func (obj *UserRepo) FindUserByToken(token string) (*po.User, error) {
 	whereUser := new(po.User)
 	user := new(po.User)
@@ -99,4 +110,21 @@ func (obj *UserRepo) FindUserByToken(token string) (*po.User, error) {
 	res := obj.db.Where(whereUser).First(user)
 
 	return user, res.Error
+}
+
+// CreateAk creat ak
+func (obj *UserRepo) CreateAk(keyPo *po.UserAppKeyPo) error {
+
+	return nil
+}
+
+// GetAkPage get ak page
+func (obj *UserRepo) GetAkPage(search map[string]interface{}) ([]po.UserAppKeyPo, error) {
+	return []po.UserAppKeyPo{}, nil
+}
+
+// FindUserAk find user ak
+func (obj *UserRepo) FindUserAk(uid uint64, ak string, as string) (po.UserAppKeyPo, error) {
+
+	return po.UserAppKeyPo{}, nil
 }
