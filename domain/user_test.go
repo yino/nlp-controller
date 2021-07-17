@@ -19,7 +19,7 @@ func init() {
 	config.GetConf()
 	repo, _ := persistence.NewRepositories(config.Conf.MySql.User, config.Conf.MySql.Password, config.Conf.MySql.Port, config.Conf.MySql.Host, config.Conf.MySql.Db)
 	log.InitLogger()
-	//repo.AutoMigrate()
+	repo.AutoMigrate()
 	user = domain.NewUserDomain(repo.User)
 }
 func TestLogin(t *testing.T) {
@@ -42,4 +42,8 @@ func TestRegister(t *testing.T) {
 
 	fmt.Println("=============")
 	fmt.Println(err)
+}
+
+func TestCreateAppKey(t *testing.T) {
+
 }

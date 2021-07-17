@@ -114,8 +114,7 @@ func (obj *UserRepo) FindUserByToken(token string) (*po.User, error) {
 
 // CreateAk creat ak
 func (obj *UserRepo) CreateAk(keyPo *po.UserAppKeyPo) error {
-
-	return nil
+	return obj.db.Create(keyPo).Error
 }
 
 // GetAkPage get ak page

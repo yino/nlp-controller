@@ -196,12 +196,18 @@ func (u *User) AuthToken(token string) (vo vo.UserVo, ok bool) {
 }
 
 // CreateAppKey create app key
-func (u *User) CreateAppKey(uid, createType string) error {
-	return nil
+func (u *User) CreateAppKey(uid uint64, createType string) error {
+	userAkPo := new(po.UserAppKeyPo)
+	userAkPo.Ak = ""
+	userAkPo.As = ""
+	userAkPo.ReqNum = 0
+	userAkPo.Type = createType
+	userAkPo.UserID = uid
+	return u.UserRepo.CreateAk(userAkPo)
 }
 
 // AppKeyPage get app key page
-func (u *User) AppKeyPage(createType string) {
+func (u *User) AppKeyPage(createType string, page, pageSize int64) {
 
 }
 

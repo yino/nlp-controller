@@ -6,9 +6,7 @@ import (
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/po"
 	"github.com/yino/nlp-controller/domain/repository"
-
 	"gorm.io/driver/mysql"
-	_ "gorm.io/driver/mysql" //这个一定要引入哦！
 	"gorm.io/gorm"
 )
 
@@ -39,7 +37,7 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 // AutoMigrate This migrate all tables
 // @return error
 func (s *Repositories) AutoMigrate() {
-	err := s.db.AutoMigrate(&entity.User{}, &po.UserAppKeyPo{}, &po.QaQuestion{})
+	err := s.db.AutoMigrate(&entity.User{}, &po.UserAppKeyPo{}, &po.QaQuestion{}, &po.UserAppKeyPo{})
 	if err != nil {
 		panic("migrate fail")
 	}
