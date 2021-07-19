@@ -2,6 +2,7 @@ package domain
 
 import (
 	"encoding/json"
+	"errors"
 	"strconv"
 	"time"
 
@@ -240,7 +241,15 @@ func (u *User) AppKeyPage(uid uint64, createType string, page, pageSize uint) vo
 
 // AuthAppKey auth ak as
 func (u *User) AuthAppKey(ak string, as string) error {
-	return nil
+	akInfo, err := u.UserRepo.FindUserAkByAkAs(ak, as)
+	if err != nil {
+		return err
+	}
+
+	if akInfo.ID > 0 {
+		return nil
+	}
+	return errors.New("auth ak fail")
 }
 
 // DeleteAppKey delete ak

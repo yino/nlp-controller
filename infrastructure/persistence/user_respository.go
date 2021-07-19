@@ -141,7 +141,8 @@ func (obj *UserRepo) GetAkPage(search map[string]interface{}, page, pageSize uin
 }
 
 // FindUserAk find user ak
-func (obj *UserRepo) FindUserAk(uid uint64, ak string, as string) (po.UserAppKeyPo, error) {
-
-	return po.UserAppKeyPo{}, nil
+func (obj *UserRepo) FindUserAkByAkAs(ak string, as string) (po.UserAppKeyPo, error) {
+	var user po.UserAppKeyPo
+	err := obj.db.Where("app_key = ?", ak).Where("app_secret = ?", as).First(&user).Error
+	return user, err
 }

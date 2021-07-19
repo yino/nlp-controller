@@ -54,3 +54,7 @@ func TestCreateAppKey(t *testing.T) {
 func TestAppKeyPage(t *testing.T) {
 	fmt.Println(user.AppKeyPage(1, "QA", 1, 10))
 }
+
+func TestAuthAppKey(t *testing.T) {
+	fmt.Println(user.AuthAppKey("d3f6cdc561c2216699809d3f17aafa0c", "51fdf32979e3dd778a0b1065216becc5"))
+}
