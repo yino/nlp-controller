@@ -60,6 +60,16 @@ func (u *UserApp) AuthToken(token string) (vo.UserVo, int) {
 	return vo, interfaces.StatusSuccess
 }
 
+// CreateAk 创建 ak
+func (u *UserApp) CreateAk(uid uint64, akType string) error {
+	u.userDomain.CreateAppKey()
+}
+
+// AkPage 获取ak page
+func (u *UserApp) AkPage() (vo vo.UserAkVoPage, ret int) {
+
+}
+
 // NewUserApp new user app
 func NewUserApp(repo repository.UserRepository) UserApp {
 	return UserApp{

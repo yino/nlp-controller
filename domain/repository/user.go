@@ -16,4 +16,6 @@ type UserRepository interface {
 	CreateAk(keyPo *po.UserAppKeyPo) error
 	GetAkPage(search map[string]interface{}, page, pageSize uint) (datList []po.UserAppKeyPo, total uint, err error)
 	FindUserAkByAkAs(ak string, as string) (po.UserAppKeyPo, error)
+	FindUserAkByID(ID uint64) (*po.UserAppKeyPo, error)
+	DeleteAkByID(ID uint64) error
 }

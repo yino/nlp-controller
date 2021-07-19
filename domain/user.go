@@ -239,6 +239,11 @@ func (u *User) AppKeyPage(uid uint64, createType string, page, pageSize uint) vo
 	return resp
 }
 
+// FindAppKeyByID
+func (u *User) FindAppKeyByID(id uint64) (*po.UserAppKeyPo, error) {
+	return u.UserRepo.FindUserAkByID(id)
+}
+
 // AuthAppKey auth ak as
 func (u *User) AuthAppKey(ak string, as string) error {
 	akInfo, err := u.UserRepo.FindUserAkByAkAs(ak, as)
@@ -254,7 +259,7 @@ func (u *User) AuthAppKey(ak string, as string) error {
 
 // DeleteAppKey delete ak
 func (u *User) DeleteAppKey(id uint64) error {
-	return nil
+	return u.UserRepo.DeleteAkByID(id)
 }
 
 // NewUserDomain new domain.User

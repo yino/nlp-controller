@@ -140,9 +140,20 @@ func (obj *UserRepo) GetAkPage(search map[string]interface{}, page, pageSize uin
 	return
 }
 
+// FindUserAkByID get ak info by id
+func (obj *UserRepo) FindUserAkByID(id uint64) (*po.UserAppKeyPo, error) {
+	userAk := new(po.UserAppKeyPo)
+	err := obj.db.Where("id = ?", id).First(&userAk).Error
+	return userAk, err
+}
+
 // FindUserAk find user ak
 func (obj *UserRepo) FindUserAkByAkAs(ak string, as string) (po.UserAppKeyPo, error) {
-	var user po.UserAppKeyPo
-	err := obj.db.Where("app_key = ?", ak).Where("app_secret = ?", as).First(&user).Error
+	var userAk po.UserAppKeyPo
+	err := obj.db.Where("app_key = ?", ak).Where("app_secret = ?", as).First(&userAk).Error
 	return user, err
+}
+
+func (obj *UserRepo) DeleteAkByID(id uint64) error {
+	return obj.db.Where("id = ?", id).Delete(&po.UserAppKeyPo{}).Error
 }
