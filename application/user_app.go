@@ -61,13 +61,27 @@ func (u *UserApp) AuthToken(token string) (vo.UserVo, int) {
 }
 
 // CreateAk 创建 ak
-func (u *UserApp) CreateAk(uid uint64, akType string) error {
-	u.userDomain.CreateAppKey()
+func (u *UserApp) CreateAk(uid uint64, akType string) (int, string) {
+	err := u.userDomain.CreateAppKey(uid, akType)
+	if err != nil {
+		return interfaces.ErrorCreateData, err.Error()
+	}
+	return interfaces.StatusSuccess, ""
 }
 
 // AkPage 获取ak page
-func (u *UserApp) AkPage() (vo vo.UserAkVoPage, ret int) {
+func (u *UserApp) AkPage(uid uint64, createType string, page, pageSize uint) (ret int, vo vo.UserAkVoPage) {
+	vo = u.userDomain.AppKeyPage(uid, createType, page, pageSize)
+	return interfaces.StatusSuccess, vo
+}
 
+// DeleteUserAk delete ak
+func (u *UserApp) DeleteUserAk(uid, id uint64) (int, string) {
+	err := u.userDomain.DeleteAppKey(id)
+	if err != nil {
+		return interfaces.ErrorDeleteData, err.Error()
+	}
+	return interfaces.StatusSuccess, ""
 }
 
 // NewUserApp new user app

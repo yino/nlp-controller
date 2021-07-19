@@ -259,6 +259,7 @@ func (u *User) AuthAppKey(ak string, as string) error {
 
 // DeleteAppKey delete ak
 func (u *User) DeleteAppKey(id uint64) error {
+	u.UserRepo.FindUserAkByID(id)
 	return u.UserRepo.DeleteAkByID(id)
 }
 
