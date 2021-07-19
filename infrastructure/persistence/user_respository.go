@@ -118,8 +118,26 @@ func (obj *UserRepo) CreateAk(keyPo *po.UserAppKeyPo) error {
 }
 
 // GetAkPage get ak page
-func (obj *UserRepo) GetAkPage(search map[string]interface{}) ([]po.UserAppKeyPo, error) {
-	return []po.UserAppKeyPo{}, nil
+func (obj *UserRepo) GetAkPage(search map[string]interface{}, page, pageSize uint) (datList []po.UserAppKeyPo, total uint, err error) {
+	var count int64
+	db := obj.db
+	if uid, ok := search["user_id"]; ok {
+		db = db.Where("user_id = ?", uid)
+	}
+	err = db.Model(&po.UserAppKeyPo{}).Count(&count).Error
+	if err != nil {
+		return
+	}
+	if page > 0 {
+		page = page - 1
+	}
+	err = db.Limit(int(pageSize)).Offset(int(page * pageSize)).Order("id desc").Find(&datList).Error
+	if err != nil {
+		return
+	}
+	total = uint(count)
+
+	return
 }
 
 // FindUserAk find user ak

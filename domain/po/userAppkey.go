@@ -20,6 +20,6 @@ type UserAppKeyPo struct {
 }
 
 // TableName table name
-func (u *UserAppKeyPo) TableName() string {
+func (UserAppKeyPo) TableName() string {
 	return "user_appkey"
 }

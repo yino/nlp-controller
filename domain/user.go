@@ -2,6 +2,7 @@ package domain
 
 import (
 	"encoding/json"
+	"strconv"
 	"time"
 
 	"github.com/yino/nlp-controller/config"
@@ -198,8 +199,12 @@ func (u *User) AuthToken(token string) (vo vo.UserVo, ok bool) {
 // CreateAppKey create app key
 func (u *User) CreateAppKey(uid uint64, createType string) error {
 	userAkPo := new(po.UserAppKeyPo)
-	userAkPo.Ak = ""
-	userAkPo.As = ""
+
+	timeNow := time.Now().Unix()
+	timeStrNow := strconv.FormatInt(timeNow, 10)
+	uidStr := strconv.FormatInt(int64(timeNow), 10)
+	userAkPo.Ak, _ = common.EncryptPassword(timeStrNow + uidStr)
+	userAkPo.As, _ = common.EncryptPassword(timeStrNow + uidStr)
 	userAkPo.ReqNum = 0
 	userAkPo.Type = createType
 	userAkPo.UserID = uid
@@ -207,8 +212,30 @@ func (u *User) CreateAppKey(uid uint64, createType string) error {
 }
 
 // AppKeyPage get app key page
-func (u *User) AppKeyPage(createType string, page, pageSize int64) {
+func (u *User) AppKeyPage(uid uint64, createType string, page, pageSize uint) vo.UserAkVoPage {
+	search := make(map[string]interface{})
+	search["user_id"] = uid
+	search["create_type"] = createType
+	dataList, total, err := u.UserRepo.GetAkPage(search, page, pageSize)
+	var resp vo.UserAkVoPage
+	resp.Page = int64(page)
+	resp.PageSize = int64(pageSize)
 
+	if err != nil {
+		return resp
+	}
+	resp.Total = int64(total)
+
+	for _, val := range dataList {
+		resp.Data = append(resp.Data, vo.UserAkVo{
+			ID:     val.ID,
+			Ak:     val.Ak,
+			As:     val.As,
+			Type:   val.Type,
+			ReqNum: val.ReqNum,
+		})
+	}
+	return resp
 }
 
 // AuthAppKey auth ak as

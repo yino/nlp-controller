@@ -2,6 +2,7 @@ package domain_test
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -16,6 +17,8 @@ import (
 var user domain.User
 
 func init() {
+	os.Setenv("env", "test")
+	fmt.Println(os.Getenv("env"))
 	config.GetConf()
 	repo, _ := persistence.NewRepositories(config.Conf.MySql.User, config.Conf.MySql.Password, config.Conf.MySql.Port, config.Conf.MySql.Host, config.Conf.MySql.Db)
 	log.InitLogger()
@@ -45,5 +48,9 @@ func TestRegister(t *testing.T) {
 }
 
 func TestCreateAppKey(t *testing.T) {
+	fmt.Println(user.CreateAppKey(1, "QA"))
+}
 
+func TestAppKeyPage(t *testing.T) {
+	fmt.Println(user.AppKeyPage(1, "QA", 1, 10))
 }
