@@ -151,7 +151,7 @@ func (obj *UserRepo) FindUserAkByID(id uint64) (*po.UserAppKeyPo, error) {
 func (obj *UserRepo) FindUserAkByAkAs(ak string, as string) (po.UserAppKeyPo, error) {
 	var userAk po.UserAppKeyPo
 	err := obj.db.Where("app_key = ?", ak).Where("app_secret = ?", as).First(&userAk).Error
-	return user, err
+	return userAk, err
 }
 
 func (obj *UserRepo) DeleteAkByID(id uint64) error {
