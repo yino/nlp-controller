@@ -1,6 +1,7 @@
 package corp
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -109,7 +110,13 @@ func (u *Users) HandlerUserRegister(c *gin.Context) {
 
 // HandlerUserCreateAk 创建 ak
 func (u *Users) HandlerUserCreateAk(c *gin.Context) {
-	modelType := c.Query("type")
+	var createAkReq vo.CreateUserAkReq
+	if err := c.ShouldBindJSON(&createAkReq); err != nil {
+		interfaces.SendResp(c, interfaces.ErrorParams, err.Error())
+		return
+	}
+	modelType := createAkReq.Type
+	fmt.Println("modelType", modelType)
 	uid := GetUid(c)
 	ret, errMsg := u.us.CreateAk(uid, modelType)
 	if ret != interfaces.StatusSuccess {
@@ -119,7 +126,7 @@ func (u *Users) HandlerUserCreateAk(c *gin.Context) {
 	interfaces.SendResp(c, ret)
 }
 
-// HandlerUserCreateAk ak page
+// HandlerUserAkPage ak page
 func (u *Users) HandlerUserAkPage(c *gin.Context) {
 	uid := GetUid(c)
 	modelType := c.Query("type")
@@ -133,19 +140,19 @@ func (u *Users) HandlerUserAkPage(c *gin.Context) {
 	if err != nil {
 		interfaces.SendResp(c, interfaces.ErrorParams)
 	}
-	ret, errMsg := u.us.AkPage(uid, modelType, uint(page), uint(limit))
+	ret, data := u.us.AkPage(uid, modelType, uint(page), uint(limit))
 	if ret != interfaces.StatusSuccess {
-		interfaces.SendResp(c, ret, errMsg)
+		interfaces.SendResp(c, ret)
 		return
 	}
-	interfaces.SendResp(c, ret)
+	interfaces.SendResp(c, ret, data)
 }
 
-// HandlerUserCreateAk ak page
+// HandlerUserAkDelete ak page
 func (u *Users) HandlerUserAkDelete(c *gin.Context) {
 	uid := GetUid(c)
-	queryId := c.Query("id")
-	id, err := strconv.ParseInt(queryId, 10, 64)
+	queryID := c.Query("id")
+	id, err := strconv.ParseInt(queryID, 10, 64)
 	if err != nil {
 		interfaces.SendResp(c, interfaces.ErrorParams, "id fail")
 		return

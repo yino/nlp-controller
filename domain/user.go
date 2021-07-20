@@ -3,6 +3,7 @@ package domain
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -222,20 +223,20 @@ func (u *User) CreateAppKey(uid uint64, createType string) error {
 	userAkPo.ReqNum = 0
 	userAkPo.Type = createType
 	userAkPo.UserID = uid
+	fmt.Println(userAkPo)
 	return u.UserRepo.CreateAk(userAkPo)
 }
 
 // AppKeyPage get app key page
 func (u *User) AppKeyPage(uid uint64, createType string, page, pageSize uint) vo.UserAkVoPage {
 	var resp vo.UserAkVoPage
-	if !u.authAkType(createType) {
+	if len(createType) > 0 && !u.authAkType(createType) {
 		return resp
 	}
 	search := make(map[string]interface{})
 	search["user_id"] = uid
 	search["create_type"] = createType
 	dataList, total, err := u.UserRepo.GetAkPage(search, page, pageSize)
-
 	resp.Page = int64(page)
 	resp.PageSize = int64(pageSize)
 	if err != nil {

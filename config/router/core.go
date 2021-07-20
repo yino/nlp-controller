@@ -29,6 +29,9 @@ func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 				// user
 				core.GET("/user/info", userInterFace.HandlerUserInfo)
 				core.GET("/user/edit", userInterFace.HandlerUserEdit)
+				core.GET("/user/ak/page", userInterFace.HandlerUserAkPage)
+				core.POST("/user/ak/add", userInterFace.HandlerUserCreateAk)
+				core.GET("/user/ak/delete", userInterFace.HandlerUserAkDelete)
 
 				// question
 				core.GET("/question/index", qaInterFace.HandlerQuestionPage)

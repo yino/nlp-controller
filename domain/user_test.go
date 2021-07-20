@@ -52,7 +52,7 @@ func TestCreateAppKey(t *testing.T) {
 }
 
 func TestAppKeyPage(t *testing.T) {
-	fmt.Println(user.AppKeyPage(1, "QA", 1, 10))
+	fmt.Println(user.AppKeyPage(1, "", 1, 10))
 }
 
 func TestAuthAppKey(t *testing.T) {

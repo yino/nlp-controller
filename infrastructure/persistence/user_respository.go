@@ -120,10 +120,12 @@ func (obj *UserRepo) CreateAk(keyPo *po.UserAppKeyPo) error {
 func (obj *UserRepo) GetAkPage(search map[string]interface{}, page, pageSize uint) (datList []po.UserAppKeyPo, total uint, err error) {
 	var count int64
 	db := obj.db
+	countDb := db.Model(&po.UserAppKeyPo{})
 	if uid, ok := search["user_id"]; ok {
 		db = db.Where("user_id = ?", uid)
+		countDb = countDb.Where("user_id = ?", uid)
 	}
-	err = db.Model(&po.UserAppKeyPo{}).Count(&count).Error
+	err = countDb.Count(&count).Error
 	if err != nil {
 		return
 	}

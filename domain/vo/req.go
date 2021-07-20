@@ -20,6 +20,11 @@ type EditUserReq struct {
 	ID uint64 `form:"id" json:"id" binding:"required"`
 }
 
+// CreateUserAkReq
+type CreateUserAkReq struct {
+	Type string `json:"type" form:"type" binding:"required"`
+}
+
 // QaAddReq add qa
 type QaAddReq struct {
 	Question      string   `json:"question" binding:"required"`
