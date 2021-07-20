@@ -44,16 +44,6 @@ func (qa *QaQuestionApp) Add(uid uint64, req vo.QaAddReq) (int, string) {
 
 // Edit 编辑
 func (qa *QaQuestionApp) Edit(uid uint64, req vo.QaEditReq) (int, string) {
-
-	infoVo, err := qa.domain.FindInfo(req.ID)
-	if err != nil {
-		return interfaces.ErrorGetData, err.Error()
-	}
-
-	if infoVo.UserId != uid {
-		return interfaces.ErrorDataNoteUser, err.Error()
-	}
-
 	qaMaster := new(entity.QaQuestion)
 	qaMaster.Question = req.Question
 	qaMaster.Answer = req.Answer
@@ -68,7 +58,7 @@ func (qa *QaQuestionApp) Edit(uid uint64, req vo.QaEditReq) (int, string) {
 		slaveQuestion.ID = question.ID
 		qaPoSlaveList = append(qaPoSlaveList, slaveQuestion)
 	}
-	err = qa.domain.Edit(qaMaster, qaPoSlaveList)
+	err := qa.domain.Edit(uid, qaMaster, qaPoSlaveList)
 	if err != nil {
 		return interfaces.ErrorUpdateData, err.Error()
 	}
@@ -78,15 +68,7 @@ func (qa *QaQuestionApp) Edit(uid uint64, req vo.QaEditReq) (int, string) {
 
 // Delete 删除
 func (qa *QaQuestionApp) Delete(uid, id uint64) (int, string) {
-	infoVo, err := qa.domain.FindInfo(id)
-	if err != nil {
-		return interfaces.ErrorGetData, err.Error()
-	}
-
-	if infoVo.UserId != uid {
-		return interfaces.ErrorDataNoteUser, err.Error()
-	}
-	if err := qa.domain.Delete(id); err != nil {
+	if err := qa.domain.Delete(uid, id); err != nil {
 		return interfaces.ErrorDeleteData, err.Error()
 	}
 	return interfaces.StatusSuccess, ""

@@ -122,7 +122,7 @@ func TestQa_Edit(t *testing.T) {
 	testQaEnt.Pid = 8052
 	slaveQuestion = append(slaveQuestion, testQaEnt)
 
-	err := qa.Edit(entityQa, slaveQuestion)
+	err := qa.Edit(uint64(1), entityQa, slaveQuestion)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -134,5 +134,5 @@ func TestQa_FindInfo(t *testing.T) {
 }
 
 func TestQa_Delete(t *testing.T) {
-	fmt.Println(qa.Delete(379))
+	fmt.Println(qa.Delete(uint64(1), 379))
 }

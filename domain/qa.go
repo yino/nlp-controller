@@ -60,7 +60,7 @@ func (q *Qa) EditMaster(qa *entity.QaQuestion) error {
 }
 
 // Delete delete question
-func (q *Qa) Delete(id uint64) error {
+func (q *Qa) Delete(uid, id uint64) error {
 	qaPo, err := q.QaRepo.FindInfo(id)
 	if qaPo.ID == 0 {
 		return errors.New("data not found")
@@ -123,13 +123,16 @@ func (q *Qa) Add(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQue
 }
 
 // Edit master question and slave questions
-func (q *Qa) Edit(masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQuestion) error {
+func (q *Qa) Edit(uid uint64, masterQuestion *entity.QaQuestion, slaveQuestion []entity.QaQuestion) error {
 	qaPo, err := q.QaRepo.FindInfo(masterQuestion.ID)
 	if qaPo.ID == 0 {
 		return errors.New("data not found")
 	}
 	if err != nil {
 		return err
+	}
+	if qaPo.UserId != uid {
+		return errors.New("not permission")
 	}
 	qaPo.Answer = masterQuestion.Answer
 	qaPo.Question = masterQuestion.Question
