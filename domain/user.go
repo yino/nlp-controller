@@ -50,7 +50,17 @@ func (u *User) Add(user *entity.User) error {
 // @param user	*entity.User	"user 实体"
 // @return error
 func (u *User) Edit(user *entity.User) error {
-	userPo := new(po.User)
+	userPo, err := u.UserRepo.UserInfo(user.ID)
+	if err != nil {
+		return err
+	}
+	if userPo.ID == 0 {
+		return errors.New("data not fond")
+	}
+
+	if userPo.ID != user.ID {
+		return errors.New("not permission")
+	}
 	userPo.Name = user.Name
 	userPo.Mobile = user.Mobile
 	userPo.Email = user.Email
@@ -258,8 +268,17 @@ func (u *User) AuthAppKey(ak string, as string) error {
 }
 
 // DeleteAppKey delete ak
-func (u *User) DeleteAppKey(id uint64) error {
-	u.UserRepo.FindUserAkByID(id)
+func (u *User) DeleteAppKey(id, uid uint64) error {
+	info, err := u.UserRepo.FindUserAkByID(id)
+	if err != nil {
+		return err
+	}
+	if info.ID == 0 {
+		return errors.New("data not found")
+	}
+	if info.UserID != uid {
+		return errors.New("not permission")
+	}
 	return u.UserRepo.DeleteAkByID(id)
 }
 

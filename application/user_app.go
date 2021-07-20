@@ -77,7 +77,7 @@ func (u *UserApp) AkPage(uid uint64, createType string, page, pageSize uint) (re
 
 // DeleteUserAk delete ak
 func (u *UserApp) DeleteUserAk(uid, id uint64) (int, string) {
-	err := u.userDomain.DeleteAppKey(id)
+	err := u.userDomain.DeleteAppKey(id, uid)
 	if err != nil {
 		return interfaces.ErrorDeleteData, err.Error()
 	}

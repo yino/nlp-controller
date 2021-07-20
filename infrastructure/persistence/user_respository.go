@@ -36,8 +36,7 @@ func (obj *UserRepo) Add(user *po.User) error {
 
 // Edit edit
 func (obj *UserRepo) Edit(user *po.User) error {
-	res := obj.db.Where("id = ?", user.ID).Save(user)
-	return res.Error
+	return obj.db.Where("id = ?", user.ID).Save(user).Error
 }
 
 // GetUserList get list
