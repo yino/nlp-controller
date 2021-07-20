@@ -58,3 +58,7 @@ func TestAppKeyPage(t *testing.T) {
 func TestAuthAppKey(t *testing.T) {
 	fmt.Println(user.AuthAppKey("d3f6cdc561c2216699809d3f17aafa0c", "51fdf32979e3dd778a0b1065216becc5"))
 }
+
+func TestDeleteAppKey(t *testing.T) {
+	fmt.Println(user.DeleteAppKey(6, 1))
+}
