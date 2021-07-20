@@ -6,11 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/yino/nlp-controller/domain/entity"
-
 	"github.com/yino/nlp-controller/config"
 	"github.com/yino/nlp-controller/config/log"
 	"github.com/yino/nlp-controller/domain"
+	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/infrastructure/persistence"
 )
 

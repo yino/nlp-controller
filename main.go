@@ -7,10 +7,10 @@ import (
 	"github.com/yino/nlp-controller/config"
 	"github.com/yino/nlp-controller/config/log"
 	"github.com/yino/nlp-controller/config/router"
-	"go.uber.org/zap"
 
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func main() {

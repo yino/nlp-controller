@@ -3,11 +3,10 @@ package domain
 import (
 	"errors"
 
-	"github.com/yino/nlp-controller/domain/vo"
-
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/po"
 	"github.com/yino/nlp-controller/domain/repository"
+	"github.com/yino/nlp-controller/domain/vo"
 )
 
 // Qa qa question 领域服务

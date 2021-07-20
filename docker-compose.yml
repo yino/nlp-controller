@@ -1,0 +1,17 @@
+version: "2"
+services:
+  booking:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    image: nlp:1.0
+    volumes:
+      - .:/go/src/nlp
+    command: bash -c "cd /go/src/nlp; go mod tidy; go build main.go; ./main"
+    ports:
+      - "9522:8000"
+    tty: true
+    environment:
+      - ENV=test
+    container_name: nlp

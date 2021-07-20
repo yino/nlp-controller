@@ -3,11 +3,9 @@ package corp
 import (
 	"strconv"
 
-	"github.com/yino/nlp-controller/domain/vo"
-
-	"github.com/yino/nlp-controller/interfaces"
-
 	"github.com/yino/nlp-controller/application"
+	"github.com/yino/nlp-controller/domain/vo"
+	"github.com/yino/nlp-controller/interfaces"
 
 	"github.com/gin-gonic/gin"
 )
