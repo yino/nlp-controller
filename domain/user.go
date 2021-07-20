@@ -209,6 +209,9 @@ func (u *User) AuthToken(token string) (vo vo.UserVo, ok bool) {
 
 // CreateAppKey create app key
 func (u *User) CreateAppKey(uid uint64, createType string) error {
+	if !u.authAkType(createType) {
+		return errors.New("model type error")
+	}
 	userAkPo := new(po.UserAppKeyPo)
 
 	timeNow := time.Now().Unix()
@@ -224,14 +227,17 @@ func (u *User) CreateAppKey(uid uint64, createType string) error {
 
 // AppKeyPage get app key page
 func (u *User) AppKeyPage(uid uint64, createType string, page, pageSize uint) vo.UserAkVoPage {
+	var resp vo.UserAkVoPage
+	if !u.authAkType(createType) {
+		return resp
+	}
 	search := make(map[string]interface{})
 	search["user_id"] = uid
 	search["create_type"] = createType
 	dataList, total, err := u.UserRepo.GetAkPage(search, page, pageSize)
-	var resp vo.UserAkVoPage
+
 	resp.Page = int64(page)
 	resp.PageSize = int64(pageSize)
-
 	if err != nil {
 		return resp
 	}
@@ -280,6 +286,11 @@ func (u *User) DeleteAppKey(id, uid uint64) error {
 		return errors.New("not permission")
 	}
 	return u.UserRepo.DeleteAkByID(id)
+}
+
+// authAkType 验证 ak 类型
+func (u *User) authAkType(akType string) bool {
+	return common.InArray(akType, entity.AkType)
 }
 
 // NewUserDomain new domain.User

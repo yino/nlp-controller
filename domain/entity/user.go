@@ -11,7 +11,4 @@ type User struct {
 	QaQuestions []po.QaQuestion   `gorm:"foreignKey:UserId;"`
 }
 
-// CreateAppKey 实体创建app key
-func (user *User) CreateAppKey() {
-
-}
+var AkType = []string{"QA"}

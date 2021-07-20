@@ -107,6 +107,57 @@ func (u *Users) HandlerUserRegister(c *gin.Context) {
 	interfaces.SendResp(c, ret)
 }
 
+// HandlerUserCreateAk 创建 ak
+func (u *Users) HandlerUserCreateAk(c *gin.Context) {
+	modelType := c.Query("type")
+	uid := GetUid(c)
+	ret, errMsg := u.us.CreateAk(uid, modelType)
+	if ret != interfaces.StatusSuccess {
+		interfaces.SendResp(c, ret, errMsg)
+		return
+	}
+	interfaces.SendResp(c, ret)
+}
+
+// HandlerUserCreateAk ak page
+func (u *Users) HandlerUserAkPage(c *gin.Context) {
+	uid := GetUid(c)
+	modelType := c.Query("type")
+	page, err := strconv.ParseInt(c.DefaultQuery("page", "1"), 10, 64)
+	if err != nil {
+		interfaces.SendResp(c, interfaces.ErrorParams)
+		return
+	}
+
+	limit, err := strconv.ParseInt(c.DefaultQuery("pageSize", "10"), 10, 64)
+	if err != nil {
+		interfaces.SendResp(c, interfaces.ErrorParams)
+	}
+	ret, errMsg := u.us.AkPage(uid, modelType, uint(page), uint(limit))
+	if ret != interfaces.StatusSuccess {
+		interfaces.SendResp(c, ret, errMsg)
+		return
+	}
+	interfaces.SendResp(c, ret)
+}
+
+// HandlerUserCreateAk ak page
+func (u *Users) HandlerUserAkDelete(c *gin.Context) {
+	uid := GetUid(c)
+	queryId := c.Query("id")
+	id, err := strconv.ParseInt(queryId, 10, 64)
+	if err != nil {
+		interfaces.SendResp(c, interfaces.ErrorParams, "id fail")
+		return
+	}
+	ret, errMsg := u.us.DeleteUserAk(uid, uint64(id))
+	if ret != interfaces.StatusSuccess {
+		interfaces.SendResp(c, ret, errMsg)
+		return
+	}
+	interfaces.SendResp(c, ret)
+}
+
 // NewUsersInterface new UserInterface
 func NewUsersInterface(us application.UserApp) Users {
 	return Users{
