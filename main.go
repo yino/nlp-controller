@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/yino/nlp-controller/interfaces/middleware"
+
 	"github.com/yino/nlp-controller/config"
 	"github.com/yino/nlp-controller/config/log"
 	"github.com/yino/nlp-controller/config/router"
@@ -18,13 +20,14 @@ func main() {
 	config.GetConf()
 	os.Setenv("GIN_MODE", "debug")
 	gin.SetMode(gin.DebugMode)
-	app := gin.Default()
+	app := gin.New()
 	pprof.Register(app)
 	// 注册路由
 	router.InitRouter(app)
 
 	// logger
 	log.InitLogger()
+	app.Use(middleware.GinLogger(log.Logger), middleware.GinRecovery(log.Logger, true))
 	defer func() {
 		err := log.Logger.Sync()
 		if err != nil {

@@ -22,7 +22,7 @@ func InitRouter(c *gin.Engine) {
 
 	c.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	repo, _ := persistence.NewRepositories(config.Conf.MySql.User, config.Conf.MySql.Password, config.Conf.MySql.Port, config.Conf.MySql.Host, config.Conf.MySql.Db)
-	repo.AutoMigrate()
+	//repo.AutoMigrate()
 	RegisterCoreRouter(c, repo)
 }
 

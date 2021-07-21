@@ -22,6 +22,10 @@ type Config struct {
 		Port        string `yaml:"port"`
 		TokenExpire int64  `yaml:"token_expire"`
 	}
+	Log struct {
+		Path     string `yaml:"path"`
+		LogLevel string `yaml:"logLevel"`
+	}
 }
 
 var Conf *Config
