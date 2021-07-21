@@ -7,3 +7,7 @@ mysql:
 app:
   host: 127.0.0.1
   port: 8000
+  token_expire: 7200 # token有效期
+log:
+  path: "./storage/log/zap.log"
+  logLevel: "debug"
