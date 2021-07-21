@@ -7,4 +7,6 @@ docker-test:
 lint:
 	goliangci-lint run .
 
+docker-restart:
+	docker-compose restart
 
