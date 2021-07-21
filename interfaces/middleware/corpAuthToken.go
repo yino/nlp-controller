@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"fmt"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/yino/nlp-controller/application"
@@ -18,10 +18,10 @@ func CorpAuthTokenMiddleware(user application.UserApp) gin.HandlerFunc {
 			interfaces.SendResp(c, interfaces.ErrorNotLogin)
 			return
 		}
+		token = strings.Replace(token, "Bearer ", "", 1)
 		vo, ret := user.AuthToken(token)
 		if ret != interfaces.StatusSuccess {
 			c.Abort()
-			fmt.Println("2222")
 			interfaces.SendResp(c, ret)
 			return
 		}

@@ -76,9 +76,8 @@ func (obj *UserRepo) GetUserPage(search map[string]interface{}, page uint, pageS
 
 // UserInfo user info
 func (obj *UserRepo) UserInfo(id uint64) (*po.User, error) {
-
 	user := new(po.User)
-	res := obj.db.First(user)
+	res := obj.db.Where("id = ?", id).First(user)
 
 	return user, res.Error
 }
@@ -103,11 +102,8 @@ func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*po.User, erro
 
 // FindUserByToken find user info by token
 func (obj *UserRepo) FindUserByToken(token string) (*po.User, error) {
-	whereUser := new(po.User)
 	user := new(po.User)
-	user.Token = token
-	res := obj.db.Where(whereUser).First(user)
-
+	res := obj.db.Where("token = ?", token).First(user)
 	return user, res.Error
 }
 

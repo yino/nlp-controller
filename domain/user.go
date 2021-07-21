@@ -154,6 +154,10 @@ func (u *User) Login(search map[string]interface{}) (vo vo.UserLoginVo, ret int)
 		return vo, interfaces.ErrorUserNotFound
 	}
 	// 校验token 是否存在及是否过期 不存在则生成新的token
+	if user.TokenExpire == nil {
+		newTime := time.Now().AddDate(-36, 0, 0)
+		user.TokenExpire = &newTime
+	}
 	if user.TokenExpire.Unix() <= time.Now().Unix() {
 		token = common.CreateUidToken(user.ID)
 
