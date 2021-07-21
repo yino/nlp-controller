@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-	fmt.Println(os.Getenv("env"))
 	// load config
 	config.GetConf()
 	os.Setenv("GIN_MODE", "debug")

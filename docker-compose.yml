@@ -13,5 +13,5 @@ services:
       - "9522:8000"
     tty: true
     environment:
-      - ENV=prod
+      - env=prod
     container_name: nlp
