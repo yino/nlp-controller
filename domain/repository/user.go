@@ -19,4 +19,5 @@ type UserRepository interface {
 	FindUserAkByID(ID uint64) (*po.UserAppKeyPo, error)
 	DeleteAkByID(ID uint64) error
 	FindAkByUidType(uid uint64, createType string) (po.UserAppKeyPo, error)
+	UpdateUserQaModel(uid uint64, ok bool) error
 }

@@ -31,7 +31,12 @@ func (factory *QaFactory) TrainModel(uid uint64) error {
 		return errors.New("user not fond")
 	}
 	qaAPI := api.QaApi{Ak: akInfo.Ak}
-	return qaAPI.TrainModel()
+	err := qaAPI.TrainModel()
+	if err != nil {
+		return err
+	}
+
+	return factory.UserRepo.UpdateUserQaModel(uid, true)
 }
 
 // NewQaFactory 创建QA工厂

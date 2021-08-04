@@ -160,3 +160,11 @@ func (obj *UserRepo) FindAkByUidType(uid uint64, createType string) (po.UserAppK
 func (obj *UserRepo) DeleteAkByID(id uint64) error {
 	return obj.db.Where("id = ?", id).Delete(&po.UserAppKeyPo{}).Error
 }
+
+func (obj *UserRepo) UpdateUserQaModel(id uint64, ok bool) error {
+	var status int8
+	if ok {
+		status = 1
+	}
+	return obj.db.Model(&po.User{}).Where("id", id).Update("qa_model_status", status).Error
+}
