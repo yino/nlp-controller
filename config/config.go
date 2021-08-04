@@ -21,6 +21,7 @@ type Config struct {
 		Host        string `yaml:"host"`
 		Port        string `yaml:"port"`
 		TokenExpire int64  `yaml:"token_expire"`
+		QaHost      string `yaml:"qa_host"`
 	}
 	Log struct {
 		Path     string `yaml:"path"`

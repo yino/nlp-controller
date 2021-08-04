@@ -52,3 +52,11 @@ type QaQuestionInfoVo struct {
 	QaQuestionVo
 	SimilarQuestion []QaQuestionVo
 }
+type QaMatchQuestionItemVo struct {
+	Question string  `json:"question"`
+	Answer   string  `json:"answer"`
+	Sims     float64 `json:"sims"`
+}
+type QaMatchQuestionVo struct {
+	Data []QaMatchQuestionItemVo
+}

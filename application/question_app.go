@@ -10,7 +10,6 @@ import (
 
 // QaQuestionApp qa app
 type QaQuestionApp struct {
-	//questionDomain
 	domain domain.Qa
 }
 
@@ -89,13 +88,27 @@ func (qa *QaQuestionApp) Info(uid, id uint64) (int, vo.QaQuestionInfoVo) {
 }
 
 // Match 检索
-func (qa *QaQuestionApp) Match(uid, page, limit int64) {
+func (qa *QaQuestionApp) Match(uid uint64, question string) (int, vo.QaMatchQuestionVo) {
+	result, err := qa.domain.Match(uid, question)
+	if err != nil {
+		return interfaces.ErrorMatchQuestion, vo.QaMatchQuestionVo{}
+	}
+	return interfaces.StatusSuccess, vo.QaMatchQuestionVo{Data: result}
+}
 
+// Train 训练模型
+func (qa *QaQuestionApp) Train(uid uint64) (int, string) {
+	err := qa.domain.Train(uid)
+	if err != nil {
+		return interfaces.ErrorTrainQa, err.Error()
+	}
+
+	return interfaces.StatusSuccess, ""
 }
 
 // NewQaApp new user app
-func NewQaApp(repo repository.QaQuestionRepository) QaQuestionApp {
+func NewQaApp(qaRepo repository.QaQuestionRepository, userRepo repository.UserRepository) QaQuestionApp {
 	return QaQuestionApp{
-		domain: domain.NewQaDomain(repo),
+		domain: domain.NewQaDomain(qaRepo, userRepo),
 	}
 }

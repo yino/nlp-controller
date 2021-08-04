@@ -21,7 +21,7 @@ func init() {
 	repo, _ := persistence.NewRepositories(config.Conf.MySql.User, config.Conf.MySql.Password, config.Conf.MySql.Port, config.Conf.MySql.Host, config.Conf.MySql.Db)
 	log.InitLogger()
 	//repo.AutoMigrate()
-	qa = domain.NewQaDomain(repo.Qa)
+	qa = domain.NewQaDomain(repo.Qa, repo.User)
 }
 func TestQa_Page(t *testing.T) {
 	search := make(map[string]interface{})
@@ -135,4 +135,12 @@ func TestQa_FindInfo(t *testing.T) {
 
 func TestQa_Delete(t *testing.T) {
 	fmt.Println(qa.Delete(uint64(1), 379))
+}
+
+func TestQa_Train(t *testing.T) {
+	fmt.Println(qa.Train(uint64(1)))
+}
+
+func TestMatch(t *testing.T) {
+	fmt.Println(qa.Match(uint64(1), "教师如何办理离职手续"))
 }

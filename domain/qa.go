@@ -3,6 +3,7 @@ package domain
 import (
 	"errors"
 
+	"github.com/yino/nlp-controller/domain/aggregate"
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/po"
 	"github.com/yino/nlp-controller/domain/repository"
@@ -11,8 +12,12 @@ import (
 
 // Qa qa question 领域服务
 type Qa struct {
-	QaRepo repository.QaQuestionRepository
+	QaRepo      repository.QaQuestionRepository
+	QaAggregate aggregate.QaFactory
 }
+
+// QaType 类型
+var QaType = "QA"
 
 // GetMasterQuestionPage 获取 master
 func (q *Qa) GetMasterQuestionPage(page, limit int64, search map[string]interface{}) (list vo.QaQuestionPageVo, err error) {
@@ -149,9 +154,21 @@ func (q *Qa) Edit(uid uint64, masterQuestion *entity.QaQuestion, slaveQuestion [
 	return q.QaRepo.Edit(qaPo, qaPoSlaveList)
 }
 
+// Train train model
+func (q *Qa) Train(uid uint64) error {
+	return q.QaAggregate.TrainModel(uid)
+}
+
+// Match match question
+func (q *Qa) Match(uid uint64, inputQuestion string) (result []vo.QaMatchQuestionItemVo, err error) {
+	return q.QaAggregate.MatchQuestion(uid, inputQuestion)
+}
+
 //NewQaDomain new qa domain
-func NewQaDomain(repo repository.QaQuestionRepository) Qa {
+func NewQaDomain(repo repository.QaQuestionRepository, userRepo repository.UserRepository) Qa {
+	qaAgg := aggregate.NewQaFactory(userRepo, repo)
 	return Qa{
-		QaRepo: repo,
+		QaRepo:      repo,
+		QaAggregate: qaAgg,
 	}
 }

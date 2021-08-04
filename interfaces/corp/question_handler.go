@@ -92,11 +92,27 @@ func (q *Qa) HandlerQuestionInfo(c *gin.Context) {
 // HandlerQuestionTrain training qa model
 func (q *Qa) HandlerQuestionTrain(c *gin.Context) {
 
+	ret, data := q.qa.Train(GetUid(c))
+	if ret != interfaces.StatusSuccess {
+		interfaces.SendResp(c, ret, data)
+		return
+	}
+	interfaces.SendResp(c, ret, data)
 }
 
 // HandlerQuestionMatch model match question
 func (q *Qa) HandlerQuestionMatch(c *gin.Context) {
-
+	question := c.DefaultQuery("question", "")
+	if len(question) == 0 {
+		interfaces.SendResp(c, interfaces.ErrorParams)
+		return
+	}
+	ret, data := q.qa.Match(GetUid(c), question)
+	if ret != interfaces.StatusSuccess {
+		interfaces.SendResp(c, ret, data)
+		return
+	}
+	interfaces.SendResp(c, ret, data)
 }
 
 // NewUserInterface new qa interface

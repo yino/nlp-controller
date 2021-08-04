@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/yino/nlp-controller/interfaces/middleware"
 
@@ -15,10 +14,12 @@ import (
 	"go.uber.org/zap"
 )
 
-func main() {
+func init() {
 	// load config
 	config.GetConf()
-	os.Setenv("GIN_MODE", "debug")
+}
+
+func main() {
 	gin.SetMode(gin.DebugMode)
 	app := gin.New()
 	pprof.Register(app)

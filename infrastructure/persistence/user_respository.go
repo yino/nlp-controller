@@ -151,6 +151,12 @@ func (obj *UserRepo) FindUserAkByAkAs(ak string, as string) (po.UserAppKeyPo, er
 	return userAk, err
 }
 
+// FindAkByUidType find user ak by uid and type
+func (obj *UserRepo) FindAkByUidType(uid uint64, createType string) (po.UserAppKeyPo, error) {
+	var data po.UserAppKeyPo
+	err := obj.db.Where("user_id = ?", uid).Where("type = ?", createType).First(&data).Error
+	return data, err
+}
 func (obj *UserRepo) DeleteAkByID(id uint64) error {
 	return obj.db.Where("id = ?", id).Delete(&po.UserAppKeyPo{}).Error
 }

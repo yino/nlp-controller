@@ -3,7 +3,6 @@ package domain
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -217,8 +216,11 @@ func (u *User) CreateAppKey(uid uint64, createType string) error {
 	if !u.authAkType(createType) {
 		return errors.New("model type error")
 	}
+	data, _ := u.UserRepo.FindAkByUidType(uid, createType)
+	if data.ID > 0 {
+		return errors.New("model type already exists")
+	}
 	userAkPo := new(po.UserAppKeyPo)
-
 	timeNow := time.Now().Unix()
 	timeStrNow := strconv.FormatInt(timeNow, 10)
 	uidStr := strconv.FormatInt(int64(timeNow), 10)
@@ -227,7 +229,6 @@ func (u *User) CreateAppKey(uid uint64, createType string) error {
 	userAkPo.ReqNum = 0
 	userAkPo.Type = createType
 	userAkPo.UserID = uid
-	fmt.Println(userAkPo)
 	return u.UserRepo.CreateAk(userAkPo)
 }
 
