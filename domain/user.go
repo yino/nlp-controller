@@ -132,10 +132,11 @@ func (u *User) UserInfo(id uint64) (vo.UserVo, error) {
 		return vo.UserVo{}, err
 	}
 	return vo.UserVo{
-		Id:     userPo.ID,
-		Mobile: userPo.Mobile,
-		Name:   userPo.Name,
-		Email:  userPo.Email,
+		Id:            userPo.ID,
+		Mobile:        userPo.Mobile,
+		Name:          userPo.Name,
+		Email:         userPo.Email,
+		QaModelStatus: userPo.QaModelStatus,
 	}, nil
 }
 

@@ -14,10 +14,11 @@ type UserLoginVo struct {
 }
 
 type UserVo struct {
-	Id     uint64 `json:"id"`
-	Name   string `json:"name"`
-	Mobile uint64 `json:"mobile"`
-	Email  string `json:"email"`
+	Id            uint64 `json:"id"`
+	Name          string `json:"name"`
+	Mobile        uint64 `json:"mobile"`
+	Email         string `json:"email"`
+	QaModelStatus uint8  `json:"qa_model_status"`
 }
 
 type UserPageVo struct {
