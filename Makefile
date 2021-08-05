@@ -21,3 +21,6 @@ exec:
 
 ps:
 	sudo docker-compose ps
+
+build:
+	sudo go build
