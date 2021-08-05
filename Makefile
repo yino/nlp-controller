@@ -1,15 +1,20 @@
 run:
 	go run main.go
 
-docker:
+up:
 	sudo docker-compose up -d
 
-docker-test:
+start:
 	sudo docker-compose up
 
 lint:
 	goliangci-lint run .
 
-docker-restart:
+restart:
 	sudo docker-compose restart
 
+stop:
+	sudo docker-compose stop
+
+exec:
+	sudo docker-compose exec nlp
