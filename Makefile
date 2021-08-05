@@ -23,4 +23,4 @@ ps:
 	sudo docker-compose ps
 
 build:
-	sudo go build
+	sudo go build main.go
