@@ -18,3 +18,6 @@ stop:
 
 exec:
 	sudo docker-compose exec nlp
+
+ps:
+	sudo docker-compose ps
