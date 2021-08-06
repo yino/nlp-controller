@@ -22,6 +22,7 @@ func GinLogger(logger *zap.Logger) gin.HandlerFunc {
 		c.Next()
 
 		cost := time.Since(start)
+		end := time.Since(time.Now())
 		logger.Info(path,
 			zap.Int("status", c.Writer.Status()),
 			zap.String("method", c.Request.Method),
@@ -31,6 +32,7 @@ func GinLogger(logger *zap.Logger) gin.HandlerFunc {
 			zap.String("user-agent", c.Request.UserAgent()),
 			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
 			zap.Duration("cost", cost),
+			zap.Duration("respTime", end-cost),
 		)
 	}
 }
