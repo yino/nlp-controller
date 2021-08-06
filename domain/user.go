@@ -295,6 +295,19 @@ func (u *User) DeleteAppKey(id, uid uint64) error {
 	return u.UserRepo.DeleteAkByID(id)
 }
 
+// FindUserByAk FindUserByAk
+func (u *User) FindUserByAk(ak string) (user vo.UserVo, err error) {
+	userEntity, err := u.UserRepo.FindUserByAk(ak)
+	if err != nil {
+		return
+	}
+	user.Id = userEntity.ID
+	user.Mobile = userEntity.Mobile
+	user.Email = userEntity.Email
+	user.Name = userEntity.Name
+	return user, err
+}
+
 // authAkType 验证 ak 类型
 func (u *User) authAkType(akType string) bool {
 	return common.InArray(akType, entity.AkType)

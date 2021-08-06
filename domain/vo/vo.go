@@ -61,3 +61,6 @@ type QaMatchQuestionItemVo struct {
 type QaMatchQuestionVo struct {
 	Data []QaMatchQuestionItemVo
 }
+type QaQuestionTotal struct {
+	Total int64
+}

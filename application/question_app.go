@@ -106,6 +106,15 @@ func (qa *QaQuestionApp) Train(uid uint64) (int, string) {
 	return interfaces.StatusSuccess, ""
 }
 
+// QuestionTotalNumber 获取问题总数
+func (qa *QaQuestionApp) QuestionTotalNumber(uid uint64) (int, vo.QaQuestionTotal) {
+	resp, err := qa.domain.QuestionTotalNumber(uid)
+	if err != nil {
+		return interfaces.ErrorQuestion, resp
+	}
+	return interfaces.StatusSuccess, resp
+}
+
 // NewQaApp new user app
 func NewQaApp(qaRepo repository.QaQuestionRepository, userRepo repository.UserRepository) QaQuestionApp {
 	return QaQuestionApp{

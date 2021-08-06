@@ -84,6 +84,14 @@ func (u *UserApp) DeleteUserAk(uid, id uint64) (int, string) {
 	return interfaces.StatusSuccess, ""
 }
 
+func (u *UserApp) FindAkByUser(ak string) (vo.UserVo, int) {
+	user, err := u.userDomain.FindUserByAk(ak)
+	if err != nil {
+		return user, interfaces.ErrorUserNotFound
+	}
+	return user, interfaces.StatusSuccess
+}
+
 // NewUserApp new user app
 func NewUserApp(repo repository.UserRepository) UserApp {
 	return UserApp{

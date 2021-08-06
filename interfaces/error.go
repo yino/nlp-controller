@@ -20,6 +20,7 @@ const (
 	ErrorDeleteData    = 5007
 	ErrorTrainQa       = 5008
 	ErrorMatchQuestion = 5009
+	ErrorQuestion      = 5010
 
 	// params error 6000~6001
 	ErrorParams = 60001
@@ -40,4 +41,5 @@ var StatusText = map[int]string{
 	ErrorDeleteData:    "delete data fail",
 	ErrorTrainQa:       "train qa model fail",
 	ErrorMatchQuestion: "match qa model fail",
+	ErrorQuestion:      "get question total number fail",
 }

@@ -15,4 +15,5 @@ type QaQuestionRepository interface {
 	GetSlaveList(pid uint64) ([]po.QaQuestion, error)
 	Add(masterQuestion *po.QaQuestion, slave []po.QaQuestion) error
 	Edit(masterQuestion *po.QaQuestion, slave []po.QaQuestion) error
+	TotalNumber(uid uint64) (int64, error)
 }

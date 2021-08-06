@@ -164,6 +164,12 @@ func (q *Qa) Match(uid uint64, inputQuestion string) (result []vo.QaMatchQuestio
 	return q.QaAggregate.MatchQuestion(uid, inputQuestion)
 }
 
+// CountQuestion question total number
+func (q *Qa) QuestionTotalNumber(uid uint64) (vo.QaQuestionTotal, error) {
+	total, err := q.QaRepo.TotalNumber(uid)
+	return vo.QaQuestionTotal{Total: total}, err
+}
+
 //NewQaDomain new qa domain
 func NewQaDomain(repo repository.QaQuestionRepository, userRepo repository.UserRepository) Qa {
 	qaAgg := aggregate.NewQaFactory(userRepo, repo)

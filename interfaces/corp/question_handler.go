@@ -71,7 +71,7 @@ func (q *Qa) HandlerQuestionDelete(c *gin.Context) {
 	interfaces.SendResp(c, ret, msg)
 }
 
-// HandlerQuestionDelete delete
+// HandlerQuestionInfo get info
 func (q *Qa) HandlerQuestionInfo(c *gin.Context) {
 	reqID := c.Query("id")
 
@@ -115,7 +115,17 @@ func (q *Qa) HandlerQuestionMatch(c *gin.Context) {
 	interfaces.SendResp(c, ret, data)
 }
 
-// NewUserInterface new qa interface
+// HandlerQuestionTotalNumber get total number
+func (q *Qa) HandlerQuestionTotalNumber(c *gin.Context) {
+	ret, data := q.qa.QuestionTotalNumber(GetUid(c))
+	if ret != interfaces.StatusSuccess {
+		interfaces.SendResp(c, ret, data)
+		return
+	}
+	interfaces.SendResp(c, ret, data)
+}
+
+// NewQaInterface new qa interface
 func NewQaInterface(app application.QaQuestionApp) Qa {
 	return Qa{
 		qa: app,

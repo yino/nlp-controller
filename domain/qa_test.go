@@ -144,3 +144,7 @@ func TestQa_Train(t *testing.T) {
 func TestMatch(t *testing.T) {
 	fmt.Println(qa.Match(uint64(1), "教师如何办理离职手续"))
 }
+
+func TestQuestionTotalNumber(t *testing.T) {
+	fmt.Println(qa.QuestionTotalNumber(uint64(1)))
+}

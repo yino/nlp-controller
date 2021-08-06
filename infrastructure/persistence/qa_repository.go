@@ -156,9 +156,6 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 		}
 	}
 
-	fmt.Println("insert", insertQuestionList)
-	fmt.Println("update", updateQuestionList)
-	fmt.Println("delete", deleteQuestionList)
 	return obj.db.Transaction(func(tx *gorm.DB) error {
 
 		question.UpdatedAt = time.Now()
@@ -192,4 +189,10 @@ func (obj *QaQuestionRepo) Edit(question *po.QaQuestion, slaveQuestion []po.QaQu
 
 		return nil
 	})
+}
+
+// TotalNumber total number
+func (obj *QaQuestionRepo) TotalNumber(uid uint64) (total int64, err error) {
+	err = obj.db.Model(&po.QaQuestion{}).Where("user_id = ?", uid).Count(&total).Error
+	return
 }
