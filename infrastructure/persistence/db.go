@@ -12,9 +12,10 @@ import (
 
 // Repositories mysql repo
 type Repositories struct {
-	User repository.UserRepository
-	Qa   repository.QaQuestionRepository
-	db   *gorm.DB
+	User   repository.UserRepository
+	Qa     repository.QaQuestionRepository
+	ApiLog repository.APILogRepository
+	db     *gorm.DB
 }
 
 // NewRepositories new Mysql
@@ -37,7 +38,7 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 // AutoMigrate This migrate all tables
 // @return error
 func (s *Repositories) AutoMigrate() {
-	err := s.db.AutoMigrate(&po.User{}, &po.UserAppKeyPo{}, &po.QaQuestion{})
+	err := s.db.AutoMigrate(&po.User{}, &po.UserAppKeyPo{}, &po.QaQuestion{}, &po.APILog{})
 	if err != nil {
 		panic("migrate fail")
 	}
