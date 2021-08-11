@@ -24,13 +24,15 @@ func init() {
 	config.GetConf()
 	repo, _ := persistence.NewRepositories(config.Conf.MySql.User, config.Conf.MySql.Password, config.Conf.MySql.Port, config.Conf.MySql.Host, config.Conf.MySql.Db)
 	log.InitLogger()
-	repo.AutoMigrate()
-	logDomain = domain.NewLogDomain(repo.ApiLog)
+	//repo.AutoMigrate()
+	logDomain = domain.NewLogDomain(repo.APILog)
 }
 
 func TestAdd(t *testing.T) {
 	logEntity := new(entity.Log)
 	var params, header po.JSON
+	params = []byte("{\"test\":\"test\"}")
+	header = []byte("{\"test\":\"test\"}")
 	logEntity.APILog = po.APILog{
 		Method:    "GET",
 		Params:    params,
@@ -38,10 +40,14 @@ func TestAdd(t *testing.T) {
 		Header:    header,
 		UserID:    1,
 		APIType:   domain.QaType,
-		APIStatus: po.INVALID,
+		APIStatus: po.NORMAL,
 		URL:       po.INVALID,
 	}
-	fmt.Println(logEntity)
+	//fmt.Println(logEntity)
 	err := logDomain.Add(logEntity)
 	fmt.Println(err)
+}
+
+func TestRequestTotalNum(t *testing.T) {
+	fmt.Println(logDomain.RequestTotalNum(1, domain.INVALID))
 }

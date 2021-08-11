@@ -14,7 +14,7 @@ import (
 type Repositories struct {
 	User   repository.UserRepository
 	Qa     repository.QaQuestionRepository
-	ApiLog repository.APILogRepository
+	APILog repository.APILogRepository
 	db     *gorm.DB
 }
 
@@ -29,16 +29,22 @@ func NewRepositories(DbUser, DbPassword, DbPort, DbHost, DbName string) (*Reposi
 	fmt.Println("MySql连接成功")
 	//db.LogMode(true) .
 	return &Repositories{
-		User: NewUserRepository(db),
-		Qa:   NewQaQuestionRepository(db),
-		db:   db,
+		User:   NewUserRepository(db),
+		Qa:     NewQaQuestionRepository(db),
+		APILog: NewLogRepository(db),
+		db:     db,
 	}, nil
 }
 
 // AutoMigrate This migrate all tables
 // @return error
 func (s *Repositories) AutoMigrate() {
-	err := s.db.AutoMigrate(&po.User{}, &po.UserAppKeyPo{}, &po.QaQuestion{}, &po.APILog{})
+	err := s.db.AutoMigrate(
+		//&po.User{},
+		//&po.UserAppKeyPo{},
+		//&po.QaQuestion{},
+		&po.APILog{},
+	)
 	if err != nil {
 		panic("migrate fail")
 	}
