@@ -64,3 +64,8 @@ type QaMatchQuestionVo struct {
 type QaQuestionTotal struct {
 	Total int64
 }
+
+type LogQPS struct {
+	Datetime string `json:"datetime"`
+	Total    int64  `json:"total"`
+}

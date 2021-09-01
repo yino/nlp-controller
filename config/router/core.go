@@ -13,8 +13,8 @@ import (
 func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 	userApp := app.NewUserApp(repo.User)
 	userInterFace := corp.NewUsersInterface(userApp)
-
 	qaInterFace := corp.NewQaInterface(app.NewQaApp(repo.Qa, repo.User))
+	apiInterface := corp.NewAPILogInterface(app.NewLogApp(repo.APILog))
 
 	v1 := c.Group("v1")
 	{
@@ -42,6 +42,9 @@ func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 				core.GET("/question/train", qaInterFace.HandlerQuestionTrain)
 				core.GET("/question/match", qaInterFace.HandlerQuestionMatch)
 				core.GET("/question/total", qaInterFace.HandlerQuestionTotalNumber)
+
+				// stat
+				core.GET("/stat/qps", apiInterface.QPS)
 			}
 		}
 	}

@@ -21,7 +21,7 @@ const (
 	ErrorTrainQa       = 5008
 	ErrorMatchQuestion = 5009
 	ErrorQuestion      = 5010
-
+	ErrorLogQPS        = 5011
 	// params error 6000~6001
 	ErrorParams = 60001
 )
@@ -42,4 +42,5 @@ var StatusText = map[int]string{
 	ErrorTrainQa:       "train qa model fail",
 	ErrorMatchQuestion: "match qa model fail",
 	ErrorQuestion:      "get question total number fail",
+	ErrorLogQPS:        "get data fail",
 }

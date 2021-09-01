@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/yino/nlp-controller/domain/po"
 
@@ -50,4 +51,8 @@ func TestAdd(t *testing.T) {
 
 func TestRequestTotalNum(t *testing.T) {
 	fmt.Println(logDomain.RequestTotalNum(1, domain.INVALID))
+}
+
+func TestQPS(t *testing.T) {
+	fmt.Println(logDomain.QPS(1, time.Now().Unix()-1000, time.Now().Unix()))
 }

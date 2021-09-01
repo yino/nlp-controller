@@ -16,5 +16,5 @@ type APILogRepository interface {
 	CountByDay(uid uint64, startTime, endTime int64)
 	CountByNormalStatus(uid uint64, status string) (int64, error)
 	// GroupCountBySecond 按秒分组统计当天
-	GroupCountBySecondOfDay(uid uint64, startTime, endTime time.Time, limit int64) ([]po.APILogGroupTime, error)
+	GroupCountBySecondOfDay(uid uint64, startTime, endTime time.Time) ([]po.APILogGroupTime, error)
 }

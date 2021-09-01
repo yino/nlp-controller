@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/yino/nlp-controller/domain/po"
@@ -51,8 +52,9 @@ func (log *LogRepo) CountByDay(uid uint64, startTime, endTime int64) {
 }
 
 // GroupCountBySecondOfDay GroupCountBySecondOfDay
-func (log *LogRepo) GroupCountBySecondOfDay(uid uint64, startTime, endTime time.Time, limit int64) (result []po.APILogGroupTime, err error) {
-	var resp []po.APILogGroupTime
-	err = log.db.Raw("SELECT `time`, COUNT( * ) AS total FROM(SELECT *,DATE_FORMAT(concat( date( created_at ), ' ',HOUR ( created_at ), ':', MINUTE ( created_at ),':', SECOND(created_at)),'%Y-%m-%d %H:%i:%s') AS `time` FROM api_log) a GROUP BY DATE_FORMAT( `time`, '%Y-%m-%d %H:%i' ) ORDER BY `time`").Scan(&resp).Error
+func (log *LogRepo) GroupCountBySecondOfDay(uid uint64, startTime, endTime time.Time) (resp []po.APILogGroupTime, err error) {
+	where := fmt.Sprintf("where user_id=%d and created_at between '%s' and '%s'", uid, startTime.Format("2006-01-02 15:04:05"), endTime.Format("2006-01-02 15:04:05"))
+	sqlStr := "SELECT `datetime`, COUNT( * ) AS total FROM(SELECT *,DATE_FORMAT(concat( date( created_at ), ' ',HOUR ( created_at ), ':', MINUTE ( created_at ),':', SECOND(created_at)),'%Y-%m-%d %H:%i:%s') AS `datetime` FROM api_log " + where + ") a GROUP BY DATE_FORMAT( `datetime`, '%Y-%m-%d %H:%i' ) ORDER BY `datetime`"
+	err = log.db.Raw(sqlStr).Scan(&resp).Error
 	return
 }

@@ -27,6 +27,6 @@ func (APILog) TableName() string {
 }
 
 type APILogGroupTime struct {
-	Time  time.Time `json:"time"`
-	Total int64     `json:"total"`
+	Datetime string `json:"datetime"`
+	Total    int64  `json:"total"`
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/repository"
+	"github.com/yino/nlp-controller/domain/vo"
 )
 
 // Log log domain
@@ -29,9 +30,32 @@ func (l *Log) RequestTotalNum(uid uint64, status string) (total int64, err error
 }
 
 // QPS QPS
-func (l *Log) QPS(uid uint64, startTime, endTime, limit int64) {
+func (l *Log) QPS(uid uint64, startTime, endTime int64) (resp []vo.LogQPS, err error) {
 	var beginTime, OffTime time.Time
-	returl.APILogRepo.GroupCountBySecondOfDay(uid, beginTime, OffTime, limit)
+	beginTime = time.Unix(startTime, 0)
+	OffTime = time.Unix(endTime, 0)
+	result, err := l.APILogRepo.GroupCountBySecondOfDay(uid, beginTime, OffTime)
+	if err != nil {
+		return
+	}
+	datetimeMap := make(map[string]int64)
+	for _, val := range result {
+		datetimeMap[val.Datetime] = val.Total
+	}
+
+	for i := startTime; i <= endTime; i++ {
+		total := int64(0)
+		dateStr := time.Unix(i, 0).Format("2006-01-02 15:04:05")
+		if v, ok := datetimeMap[dateStr]; ok {
+			total = v
+		}
+		resp = append(resp, vo.LogQPS{
+			Datetime: dateStr,
+			Total:    total,
+		})
+	}
+	return
+
 }
 
 // NewUserDomain new domain.Log
