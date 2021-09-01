@@ -26,6 +26,10 @@ func (a *APILog) QPS(c *gin.Context) {
 		interfaces.SendResp(c, interfaces.ErrorParams)
 	}
 
+	if endTime-startTime > 3600*24 {
+		interfaces.SendResp(c, interfaces.ErrorParams)
+	}
+
 	resp, ret := a.logApp.QPS(uid, startTime, endTime)
 	interfaces.SendResp(c, ret, resp)
 }
