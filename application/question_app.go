@@ -103,7 +103,6 @@ func (qa *QaQuestionApp) Train(uid uint64) (int, string) {
 	if err != nil {
 		return interfaces.ErrorTrainQa, err.Error()
 	}
-
 	return interfaces.StatusSuccess, ""
 }
 
