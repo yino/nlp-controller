@@ -15,12 +15,12 @@ func RegisterAPIRouter(c *gin.Engine, repo *persistence.Repositories) {
 	userInterFace := corp.NewUsersInterface(userApp)
 
 	qaInterFace := corp.NewQaInterface(app.NewQaApp(repo.Qa, repo.User))
-
+	logApp := app.NewLogApp(repo.APILog)
 	v1 := c.Group("v1")
 	{
 		core := v1.Group("api")
 		{
-			core.Use(middleware.APIAkAuthMiddleware(userApp))
+			core.Use(middleware.APIAkAuthMiddleware(userApp, logApp))
 			{
 				// user
 				core.GET("/user/info", userInterFace.HandlerUserInfo)

@@ -2,6 +2,8 @@ package application
 
 import (
 	"github.com/yino/nlp-controller/domain"
+	"github.com/yino/nlp-controller/domain/entity"
+	"github.com/yino/nlp-controller/domain/po"
 	"github.com/yino/nlp-controller/domain/repository"
 	"github.com/yino/nlp-controller/domain/vo"
 	"github.com/yino/nlp-controller/interfaces"
@@ -17,6 +19,25 @@ func (l *LogApp) QPS(uid uint64, startTime, endTime int64) ([]vo.LogQPS, int) {
 		return nil, interfaces.ErrorLogQPS
 	}
 	return resp, interfaces.StatusSuccess
+}
+
+func (l *LogApp) Write(uid uint64, method string, params []byte, header []byte, ip, URL string) int {
+	logEntity := new(entity.Log)
+	logEntity.APILog = po.APILog{
+		Method:    method,
+		Params:    params,
+		IP:        ip,
+		Header:    header,
+		UserID:    uid,
+		APIType:   domain.QaType,
+		APIStatus: po.NORMAL,
+		URL:       URL,
+	}
+	err := l.domain.Add(logEntity)
+	if err != nil {
+		return interfaces.ErrorLogQPS
+	}
+	return interfaces.StatusSuccess
 }
 
 // NewLogApp new user app

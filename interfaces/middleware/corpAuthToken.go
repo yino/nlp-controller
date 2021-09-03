@@ -12,6 +12,7 @@ import (
 func CorpAuthTokenMiddleware(user application.UserApp) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
+
 		token := c.GetHeader("Authorization")
 		if len(token) == 0 {
 			c.Abort()
@@ -27,6 +28,8 @@ func CorpAuthTokenMiddleware(user application.UserApp) gin.HandlerFunc {
 		}
 		c.Set("uid", vo.Id)
 		c.Next()
+
+		//logApp.Write(vo.Id, c.Request.Method, "", "")
 	}
 
 }

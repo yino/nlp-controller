@@ -22,6 +22,10 @@ type User struct {
 	DeletedAt     gorm.DeletedAt `json:"deleted_at,omitempty"`
 }
 
+// TableName table name
+func (User) TableName() string {
+	return "users"
+}
 func (user *User) BeforeCreate(db *gorm.DB) (err error) {
 	user.Password = common.MD5(user.Password)
 	return

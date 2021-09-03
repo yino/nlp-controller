@@ -169,12 +169,14 @@ func (obj *UserRepo) UpdateUserQaModel(id uint64, ok bool) error {
 	return obj.db.Model(&po.User{}).Where("id", id).Update("qa_model_status", status).Error
 }
 
-func (obj *UserRepo) FindUserByAk(ak string) (user *po.User, err error) {
+func (obj *UserRepo) FindUserByAk(ak string) (*po.User, error) {
 	var userAk po.UserAppKeyPo
-	err = obj.db.Where("app_key = ?", ak).First(&userAk).Error
+	user := new(po.User)
+	err := obj.db.Where("app_key = ?", ak).First(&userAk).Error
+
 	if err != nil {
-		return
+		return user, err
 	}
 	err = obj.db.Where("id = ?", userAk.UserID).First(user).Error
-	return
+	return user, err
 }
