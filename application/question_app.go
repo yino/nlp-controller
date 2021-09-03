@@ -93,6 +93,7 @@ func (qa *QaQuestionApp) Match(uid uint64, question string) (int, vo.QaMatchQues
 	if err != nil {
 		return interfaces.ErrorMatchQuestion, vo.QaMatchQuestionVo{}
 	}
+
 	return interfaces.StatusSuccess, vo.QaMatchQuestionVo{Data: result}
 }
 

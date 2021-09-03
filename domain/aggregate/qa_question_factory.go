@@ -6,7 +6,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yino/nlp-controller/config/log"
-
 	"github.com/yino/nlp-controller/domain/repository"
 	"github.com/yino/nlp-controller/domain/vo"
 	"github.com/yino/nlp-controller/infrastructure/api"
