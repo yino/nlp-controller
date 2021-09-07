@@ -3,10 +3,17 @@ package config
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/yino/nlp-controller/infrastructure"
 
 	"gopkg.in/yaml.v2"
+)
+
+const (
+	PROD = "prod"
+	DEV  = "dev"
+	TEST = "test"
 )
 
 type Config struct {
@@ -45,4 +52,18 @@ func GetConf() *Config {
 	}
 	Conf = _config
 	return _config
+}
+
+func GetEnv() string {
+	env := os.Getenv("ENV")
+	envMap := make(map[string]string)
+	envMap[PROD] = PROD
+	envMap[DEV] = DEV
+	envMap[TEST] = TEST
+
+	if v, ok := envMap[env]; !ok {
+		return DEV
+	} else {
+		return v
+	}
 }

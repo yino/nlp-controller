@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/yino/common"
@@ -90,13 +91,18 @@ func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*po.User, erro
 		intMobile, _ := strconv.Atoi(searchMobile.(string))
 		mobile := uint64(intMobile)
 		whereUser.Mobile = mobile
+		if mobile == 0 {
+			return user, errors.New("手机号格式错误")
+		}
 	}
 
 	if password, ok := search["password"]; ok {
 		whereUser.Password = common.MD5(password.(string))
 	}
-	res := obj.db.Where(whereUser).First(user)
-
+	fmt.Println(whereUser.Mobile)
+	fmt.Println(whereUser.Password)
+	res := obj.db.Debug().Where(whereUser).First(user)
+	fmt.Println(user, res.Error)
 	return user, res.Error
 }
 

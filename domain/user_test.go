@@ -26,7 +26,7 @@ func init() {
 }
 func TestLogin(t *testing.T) {
 	search := map[string]interface{}{
-		"mobile":   "12345678900",
+		"mobile":   "airdb",
 		"password": "123456",
 	}
 	fmt.Println(user.Login(search))
