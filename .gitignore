@@ -4,3 +4,4 @@
 !template.yaml
 !docs/swagger.yaml
 storage/
+tmp/
