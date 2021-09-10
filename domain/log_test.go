@@ -3,6 +3,7 @@ package domain_test
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
@@ -55,4 +56,22 @@ func TestRequestTotalNum(t *testing.T) {
 
 func TestQPS(t *testing.T) {
 	fmt.Println(logDomain.QPS(1, time.Now().Unix()-1000, time.Now().Unix()))
+}
+
+func TestValidRequestTotalNum(t *testing.T) {
+	total, err := logDomain.ValidRequestTotalNum(1)
+	fmt.Println(total, err)
+}
+
+func TestInvalidRequestTotalNum(t *testing.T) {
+	total, err := logDomain.InvalidRequestTotalNum(1)
+	test := *test1()
+
+	fmt.Println(reflect.TypeOf(test))
+	fmt.Println(total, err)
+}
+
+func test1() *int {
+	item := 1
+	return &item
 }

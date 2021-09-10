@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/yino/nlp-controller/domain/po"
+
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/repository"
 	"github.com/yino/nlp-controller/domain/vo"
@@ -56,6 +58,16 @@ func (l *Log) QPS(uid uint64, startTime, endTime int64) (resp []vo.LogQPS, err e
 	}
 	return
 
+}
+
+// ValidRequestTotalNum 有效请求总数
+func (l *Log) ValidRequestTotalNum(uid uint64) (int64, error) {
+	return l.APILogRepo.CountByAPIType(uid, po.NORMAL)
+}
+
+// InvalidRequestTotalNum 无效请求总数
+func (l *Log) InvalidRequestTotalNum(uid uint64) (int64, error) {
+	return l.APILogRepo.CountByAPIType(uid, po.INVALID)
 }
 
 // NewUserDomain new domain.Log
