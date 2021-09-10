@@ -21,7 +21,7 @@ func (l *LogApp) QPS(uid uint64, startTime, endTime int64) ([]vo.LogQPS, int) {
 	return resp, interfaces.StatusSuccess
 }
 
-func (l *LogApp) Write(uid uint64, method string, params []byte, header []byte, ip, URL string) int {
+func (l *LogApp) Write(uid uint64, method string, params []byte, header []byte, ip, URL, apiStatus string) int {
 	logEntity := new(entity.Log)
 	logEntity.APILog = po.APILog{
 		Method:    method,
@@ -30,7 +30,7 @@ func (l *LogApp) Write(uid uint64, method string, params []byte, header []byte, 
 		Header:    header,
 		UserID:    uid,
 		APIType:   domain.QaType,
-		APIStatus: po.NORMAL,
+		APIStatus: apiStatus,
 		URL:       URL,
 	}
 	err := l.domain.Add(logEntity)

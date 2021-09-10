@@ -38,7 +38,6 @@ func (l *Log) QPS(uid uint64, startTime, endTime int64) (resp []vo.LogQPS, err e
 	if err != nil {
 		return
 	}
-	fmt.Println(result)
 	datetimeMap := make(map[string]int64)
 	for _, val := range result {
 		datetimeMap[val.Datetime] = val.Total
