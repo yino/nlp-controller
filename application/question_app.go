@@ -3,8 +3,8 @@ package application
 import (
 	"github.com/yino/nlp-controller/domain"
 	"github.com/yino/nlp-controller/domain/entity"
-	"github.com/yino/nlp-controller/domain/repository"
 	"github.com/yino/nlp-controller/domain/vo"
+	"github.com/yino/nlp-controller/infrastructure/persistence"
 	"github.com/yino/nlp-controller/interfaces"
 )
 
@@ -116,8 +116,8 @@ func (qa *QaQuestionApp) QuestionTotalNumber(uid uint64) (int, vo.QaQuestionTota
 }
 
 // NewQaApp new user app
-func NewQaApp(qaRepo repository.QaQuestionRepository, userRepo repository.UserRepository) QaQuestionApp {
+func NewQaApp(repo *persistence.Repositories) QaQuestionApp {
 	return QaQuestionApp{
-		domain: domain.NewQaDomain(qaRepo, userRepo),
+		domain: domain.NewQaDomain(repo.Qa, repo.User),
 	}
 }

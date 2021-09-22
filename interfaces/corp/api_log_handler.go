@@ -14,7 +14,6 @@ type APILog struct {
 
 func (a *APILog) QPS(c *gin.Context) {
 	uid := GetUid(c)
-
 	startTime, err := strconv.ParseInt(c.Query("startTime"), 10, 64)
 	if err != nil {
 		interfaces.SendResp(c, interfaces.ErrorParams)
@@ -31,6 +30,12 @@ func (a *APILog) QPS(c *gin.Context) {
 	}
 
 	resp, ret := a.logApp.QPS(uid, startTime, endTime)
+	interfaces.SendResp(c, ret, resp)
+}
+
+func (a *APILog) GetRequestNum(c *gin.Context) {
+	uid := GetUid(c)
+	resp, ret := a.logApp.RequestNum(uid)
 	interfaces.SendResp(c, ret, resp)
 }
 

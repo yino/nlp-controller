@@ -69,3 +69,8 @@ type LogQPS struct {
 	Datetime string `json:"datetime"`
 	Total    int64  `json:"total"`
 }
+
+type RequestNum struct {
+	InvalidTotal int64
+	ValidTotal   int64
+}

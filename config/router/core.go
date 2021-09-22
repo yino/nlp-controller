@@ -11,10 +11,10 @@ import (
 
 // RegisterCoreRouter 注册 core路由
 func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
-	userApp := app.NewUserApp(repo.User)
+	userApp := app.NewUserApp(repo)
 	userInterFace := corp.NewUsersInterface(userApp)
-	qaInterFace := corp.NewQaInterface(app.NewQaApp(repo.Qa, repo.User))
-	apiInterface := corp.NewAPILogInterface(app.NewLogApp(repo.APILog))
+	qaInterFace := corp.NewQaInterface(app.NewQaApp(repo))
+	apiInterface := corp.NewAPILogInterface(app.NewLogApp(repo))
 
 	v1 := c.Group("v1")
 	{
@@ -45,6 +45,7 @@ func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 
 				// stat
 				core.GET("/stat/qps", apiInterface.QPS)
+				core.GET("/stat/getReqNum", apiInterface.GetRequestNum)
 			}
 		}
 	}

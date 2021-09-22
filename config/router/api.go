@@ -11,11 +11,11 @@ import (
 
 // RegisterAPIRouter api 路由
 func RegisterAPIRouter(c *gin.Engine, repo *persistence.Repositories) {
-	userApp := app.NewUserApp(repo.User)
+	userApp := app.NewUserApp(repo)
 	userInterFace := corp.NewUsersInterface(userApp)
 
-	qaInterFace := corp.NewQaInterface(app.NewQaApp(repo.Qa, repo.User))
-	logApp := app.NewLogApp(repo.APILog)
+	qaInterFace := corp.NewQaInterface(app.NewQaApp(repo))
+	logApp := app.NewLogApp(repo)
 	v1 := c.Group("v1")
 	{
 		core := v1.Group("api")

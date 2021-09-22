@@ -3,8 +3,8 @@ package application
 import (
 	"github.com/yino/nlp-controller/domain"
 	"github.com/yino/nlp-controller/domain/entity"
-	"github.com/yino/nlp-controller/domain/repository"
 	"github.com/yino/nlp-controller/domain/vo"
+	"github.com/yino/nlp-controller/infrastructure/persistence"
 	"github.com/yino/nlp-controller/interfaces"
 )
 
@@ -93,8 +93,8 @@ func (u *UserApp) FindAkByUser(ak string) (vo.UserVo, int) {
 }
 
 // NewUserApp new user app
-func NewUserApp(repo repository.UserRepository) UserApp {
+func NewUserApp(repo *persistence.Repositories) UserApp {
 	return UserApp{
-		userDomain: domain.NewUserDomain(repo),
+		userDomain: domain.NewUserDomain(repo.User),
 	}
 }

@@ -161,10 +161,11 @@ func (q *Qa) Train(uid uint64) error {
 
 // Match match question
 func (q *Qa) Match(uid uint64, inputQuestion string) (result []vo.QaMatchQuestionItemVo, err error) {
+	// 创建match question 聚合根
 	return q.QaAggregate.MatchQuestion(uid, inputQuestion)
 }
 
-// CountQuestion question total number
+// QuestionTotalNumber question total number
 func (q *Qa) QuestionTotalNumber(uid uint64) (vo.QaQuestionTotal, error) {
 	total, err := q.QaRepo.TotalNumber(uid)
 	return vo.QaQuestionTotal{Total: total}, err

@@ -4,8 +4,8 @@ import (
 	"github.com/yino/nlp-controller/domain"
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/po"
-	"github.com/yino/nlp-controller/domain/repository"
 	"github.com/yino/nlp-controller/domain/vo"
+	"github.com/yino/nlp-controller/infrastructure/persistence"
 	"github.com/yino/nlp-controller/interfaces"
 )
 
@@ -13,6 +13,7 @@ type LogApp struct {
 	domain domain.Log
 }
 
+// QPS .
 func (l *LogApp) QPS(uid uint64, startTime, endTime int64) ([]vo.LogQPS, int) {
 	resp, err := l.domain.QPS(uid, startTime, endTime)
 	if err != nil {
@@ -21,6 +22,7 @@ func (l *LogApp) QPS(uid uint64, startTime, endTime int64) ([]vo.LogQPS, int) {
 	return resp, interfaces.StatusSuccess
 }
 
+// Write 写入log
 func (l *LogApp) Write(uid uint64, method string, params []byte, header []byte, ip, URL, apiStatus string) int {
 	logEntity := new(entity.Log)
 	logEntity.APILog = po.APILog{
@@ -40,9 +42,32 @@ func (l *LogApp) Write(uid uint64, method string, params []byte, header []byte, 
 	return interfaces.StatusSuccess
 }
 
+// Stat统计
+func (l *LogApp) RequestNum(uid uint64) (vo.RequestNum, int) {
+	var (
+		rep vo.RequestNum
+		ret = interfaces.StatusSuccess
+	)
+	// 无效的请求
+	invalidTotal, err := l.domain.InvalidRequestTotalNum(uid)
+	if err != nil {
+		invalidTotal = 0
+		ret = interfaces.ErrorRequestNum
+	}
+	// 有效的请求
+	validTotal, err := l.domain.ValidRequestTotalNum(uid)
+	if err != nil {
+		validTotal = 0
+		ret = interfaces.ErrorRequestNum
+	}
+	rep.InvalidTotal = invalidTotal
+	rep.ValidTotal = validTotal
+	return rep, ret
+}
+
 // NewLogApp new user app
-func NewLogApp(repo repository.APILogRepository) LogApp {
+func NewLogApp(repo *persistence.Repositories) LogApp {
 	return LogApp{
-		domain: domain.NewLogDomain(repo),
+		domain: domain.NewLogDomain(repo.APILog),
 	}
 }
