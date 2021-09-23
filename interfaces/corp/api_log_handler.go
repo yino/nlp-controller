@@ -39,6 +39,13 @@ func (a *APILog) GetRequestNum(c *gin.Context) {
 	interfaces.SendResp(c, ret, resp)
 }
 
+// GetQPSPeak 获取qps峰值
+func (a *APILog) GetQPSPeak(c *gin.Context) {
+	uid := GetUid(c)
+	resp, ret := a.logApp.QPSPeak(uid)
+	interfaces.SendResp(c, ret, resp)
+}
+
 // NewAPILogInterface new APILog interface
 func NewAPILogInterface(app application.LogApp) APILog {
 	return APILog{

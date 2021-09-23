@@ -74,3 +74,6 @@ type RequestNum struct {
 	RequestTotal int64
 	ValidTotal   int64
 }
+type QPSPeak struct {
+	QPSPeak int64
+}

@@ -23,6 +23,7 @@ const (
 	ErrorQuestion      = 5010
 	ErrorLogQPS        = 5011
 	ErrorRequestNum    = 5012
+	ErrorQPSPeak       = 5013
 	// params error 6000~6001
 	ErrorParams = 60001
 )
@@ -45,4 +46,5 @@ var StatusText = map[int]string{
 	ErrorQuestion:      "get question total number fail",
 	ErrorLogQPS:        "get log qps fail",
 	ErrorRequestNum:    "get request num fail",
+	ErrorQPSPeak:       "get qps peak fail",
 }
