@@ -71,6 +71,7 @@ func (l *LogApp) RequestNum(uid uint64) (vo.RequestNum, int) {
 	return rep, ret
 }
 
+// QPSPeak qps 峰值
 func (l *LogApp) QPSPeak(uid uint64) (vo.QPSPeak, int) {
 	var res vo.QPSPeak
 	qpsPeak, err := l.domain.QPSPeak(uid)
