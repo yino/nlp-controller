@@ -1,6 +1,8 @@
 package log
 
 import (
+	"fmt"
+
 	"github.com/natefinch/lumberjack"
 	"github.com/yino/nlp-controller/config"
 
@@ -70,4 +72,8 @@ func InitLogger() {
 	// 构造日志
 	Logger = zap.New(core, caller, development, filed)
 	Logger.Info("DefaultLogger init success")
+}
+
+func Error(fileName, funcName, msg string, err error) {
+	Logger.Error(fmt.Sprintf("【file:%s】, 【func: %s】, msg: %s", fileName, funcName, msg), zap.Error(err))
 }

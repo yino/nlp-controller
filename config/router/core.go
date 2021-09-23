@@ -46,6 +46,7 @@ func RegisterCoreRouter(c *gin.Engine, repo *persistence.Repositories) {
 				// stat
 				core.GET("/stat/qps", apiInterface.QPS)
 				core.GET("/stat/getReqNum", apiInterface.GetRequestNum)
+				core.GET("/stat/getQPSPeak", apiInterface.GetQPSPeak)
 			}
 		}
 	}
