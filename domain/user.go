@@ -148,7 +148,12 @@ func (u *User) Login(search map[string]interface{}) (vo vo.UserLoginVo, ret int)
 	user, err := u.UserRepo.FindUserInfo(search)
 	var token string
 	if err != nil {
-		return vo, interfaces.ErrorUserNotFound
+		search["name"] = search["mobile"]
+		delete(search, "mobile")
+		user, err = u.UserRepo.FindUserInfo(search)
+		if err != nil {
+			return vo, interfaces.ErrorUserNotFound
+		}
 	}
 	if user.ID == 0 {
 		return vo, interfaces.ErrorUserNotFound

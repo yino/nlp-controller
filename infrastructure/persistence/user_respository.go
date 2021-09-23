@@ -96,17 +96,22 @@ func (obj *UserRepo) FindUserInfo(search map[string]interface{}) (*po.User, erro
 		}
 	}
 
+	if searchName, ok := search["name"]; ok {
+		whereUser.Name = searchName.(string)
+		if len(whereUser.Name) == 0 {
+			return user, errors.New("用户名错误")
+		}
+	}
+
 	if password, ok := search["password"]; ok {
 		whereUser.Password = common.MD5(password.(string))
 	}
-	fmt.Println(whereUser.Mobile)
-	fmt.Println(whereUser.Password)
 	res := obj.db.Debug().Where(whereUser).First(user)
 	fmt.Println(user, res.Error)
 	return user, res.Error
 }
 
-// FindUserByToken find user info by token
+// FindUserByToken find user FindUserInfo by token
 func (obj *UserRepo) FindUserByToken(token string) (*po.User, error) {
 	user := new(po.User)
 	res := obj.db.Where("token = ?", token).First(user)
