@@ -40,15 +40,25 @@ func (log *LogRepo) CountByAPIType(uid uint64, apiType string) (count int64, err
 	return
 }
 
-// CountByNormalStatus CountByNormalStatus
+// CountByNormalStatus 根据uid与api status 获取请求量
 func (log *LogRepo) CountByNormalStatus(uid uint64, status string) (count int64, err error) {
 	err = log.db.Model(&po.APILog{}).Where("user_id = ?", uid).Where("api_status", status).Count(&count).Error
 	return
 }
 
-// CountByDay CountByDay
-func (log *LogRepo) CountByDay(uid uint64, startTime, endTime int64) {
+// CountByDay 统计最大的QPS
+func (log *LogRepo) MaxQPS(uid uint64) (num int64, err error) {
 
+	type Result struct {
+		QPS int64 `json:"qps"`
+	}
+	var res Result
+	err = log.db.Model(&po.APILog{}).Where("user_id = ?", uid).Select("count(*) as qps").Group("created_at").Order("qps desc").First(&res).Error
+
+	if err == nil {
+		num = res.QPS
+	}
+	return
 }
 
 // GroupCountBySecondOfDay GroupCountBySecondOfDay

@@ -9,6 +9,7 @@ import (
 	"github.com/yino/nlp-controller/interfaces"
 )
 
+// LogApp .
 type LogApp struct {
 	domain domain.Log
 }
@@ -42,25 +43,25 @@ func (l *LogApp) Write(uid uint64, method string, params []byte, header []byte, 
 	return interfaces.StatusSuccess
 }
 
-// Stat统计
+// RequestNum 统计请求量
 func (l *LogApp) RequestNum(uid uint64) (vo.RequestNum, int) {
 	var (
 		rep vo.RequestNum
 		ret = interfaces.StatusSuccess
 	)
 	// 无效的请求
-	invalidTotal, err := l.domain.InvalidRequestTotalNum(uid)
+	requestTotal, err := l.domain.RequestTotalNum(uid, domain.ALL)
 	if err != nil {
-		invalidTotal = 0
+		requestTotal = 0
 		ret = interfaces.ErrorRequestNum
 	}
 	// 有效的请求
-	validTotal, err := l.domain.ValidRequestTotalNum(uid)
+	validTotal, err := l.domain.RequestTotalNum(uid, domain.NORMAL)
 	if err != nil {
 		validTotal = 0
 		ret = interfaces.ErrorRequestNum
 	}
-	rep.InvalidTotal = invalidTotal
+	rep.RequestTotal = requestTotal
 	rep.ValidTotal = validTotal
 	return rep, ret
 }

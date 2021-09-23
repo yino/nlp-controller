@@ -13,7 +13,7 @@ type APILogRepository interface {
 	Count(uid uint64) (int64, error)
 	CountByAPIType(uid uint64, apiType string) (int64, error)
 	// CountByDay 按天统计
-	CountByDay(uid uint64, startTime, endTime int64)
+	MaxQPS(uid uint64) (int64, error)
 	CountByNormalStatus(uid uint64, status string) (int64, error)
 	// GroupCountBySecond 按秒分组统计当天
 	GroupCountBySecondOfDay(uid uint64, startTime, endTime time.Time) ([]po.APILogGroupTime, error)

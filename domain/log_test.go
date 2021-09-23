@@ -71,6 +71,11 @@ func TestInvalidRequestTotalNum(t *testing.T) {
 	fmt.Println(total, err)
 }
 
+func TestMaxQPS(t *testing.T) {
+	total, err := logDomain.QPSPeak(1)
+	fmt.Println(total, err)
+}
+
 func test1() *int {
 	item := 1
 	return &item

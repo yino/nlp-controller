@@ -71,6 +71,6 @@ type LogQPS struct {
 }
 
 type RequestNum struct {
-	InvalidTotal int64
+	RequestTotal int64
 	ValidTotal   int64
 }

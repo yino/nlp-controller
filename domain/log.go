@@ -62,12 +62,17 @@ func (l *Log) QPS(uid uint64, startTime, endTime int64) (resp []vo.LogQPS, err e
 
 // ValidRequestTotalNum 有效请求总数
 func (l *Log) ValidRequestTotalNum(uid uint64) (int64, error) {
-	return l.APILogRepo.CountByAPIType(uid, po.NORMAL)
+	return l.APILogRepo.CountByNormalStatus(uid, po.NORMAL)
 }
 
 // InvalidRequestTotalNum 无效请求总数
 func (l *Log) InvalidRequestTotalNum(uid uint64) (int64, error) {
-	return l.APILogRepo.CountByAPIType(uid, po.INVALID)
+	return l.APILogRepo.CountByNormalStatus(uid, po.INVALID)
+}
+
+// QPSPeak qps峰值
+func (l *Log) QPSPeak(uid uint64) (int64, error) {
+	return l.APILogRepo.MaxQPS(uid)
 }
 
 // NewUserDomain new domain.Log
