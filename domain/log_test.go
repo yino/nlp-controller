@@ -75,6 +75,14 @@ func TestMaxQPS(t *testing.T) {
 	total, err := logDomain.QPSPeak(1)
 	fmt.Println(total, err)
 }
+func TestQPSWeekGroupByDay(t *testing.T) {
+	res, err := logDomain.RequestNumGroupByDay(1, time.Now().Unix()-(3600*24*7), time.Now().Unix())
+	fmt.Println(res, err)
+}
+func TestValidQPSWeekGroupByDay(t *testing.T) {
+	res, err := logDomain.ValidRequestNumGroupByDay(1, time.Now().Unix()-(3600*24*7), time.Now().Unix())
+	fmt.Println(res, err)
+}
 
 func test1() *int {
 	item := 1

@@ -11,40 +11,42 @@ const (
 	ErrorToken        = 4002
 
 	// database err 5000~5999
-	ErrorRegister      = 5001
-	ErrorCreateToken   = 5002
-	ErrorGetData       = 5003
-	ErrorCreateData    = 5004
-	ErrorDataNoteUser  = 5005
-	ErrorUpdateData    = 5006
-	ErrorDeleteData    = 5007
-	ErrorTrainQa       = 5008
-	ErrorMatchQuestion = 5009
-	ErrorQuestion      = 5010
-	ErrorLogQPS        = 5011
-	ErrorRequestNum    = 5012
-	ErrorQPSPeak       = 5013
+	ErrorRegister        = 5001
+	ErrorCreateToken     = 5002
+	ErrorGetData         = 5003
+	ErrorCreateData      = 5004
+	ErrorDataNoteUser    = 5005
+	ErrorUpdateData      = 5006
+	ErrorDeleteData      = 5007
+	ErrorTrainQa         = 5008
+	ErrorMatchQuestion   = 5009
+	ErrorQuestion        = 5010
+	ErrorLogQPS          = 5011
+	ErrorRequestNum      = 5012
+	ErrorQPSPeak         = 5013
+	ErrorSevenRequestNum = 5014
 	// params error 6000~6001
 	ErrorParams = 60001
 )
 
 var StatusText = map[int]string{
-	StatusSuccess:      "success",
-	ErrorUserNotFound:  "user not fond",
-	ErrorRegister:      "register fail",
-	ErrorCreateToken:   "create token fail",
-	ErrorParams:        "params error",
-	ErrorNotLogin:      "please login first",
-	ErrorToken:         "invalid token",
-	ErrorGetData:       "get data fail",
-	ErrorCreateData:    "create data fail",
-	ErrorDataNoteUser:  "This data does not belong to the user",
-	ErrorUpdateData:    "update data fail",
-	ErrorDeleteData:    "delete data fail",
-	ErrorTrainQa:       "train qa model fail",
-	ErrorMatchQuestion: "match qa model fail",
-	ErrorQuestion:      "get question total number fail",
-	ErrorLogQPS:        "get log qps fail",
-	ErrorRequestNum:    "get request num fail",
-	ErrorQPSPeak:       "get qps peak fail",
+	StatusSuccess:        "success",
+	ErrorUserNotFound:    "user not fond",
+	ErrorRegister:        "register fail",
+	ErrorCreateToken:     "create token fail",
+	ErrorParams:          "params error",
+	ErrorNotLogin:        "please login first",
+	ErrorToken:           "invalid token",
+	ErrorGetData:         "get data fail",
+	ErrorCreateData:      "create data fail",
+	ErrorDataNoteUser:    "This data does not belong to the user",
+	ErrorUpdateData:      "update data fail",
+	ErrorDeleteData:      "delete data fail",
+	ErrorTrainQa:         "train qa model fail",
+	ErrorMatchQuestion:   "match qa model fail",
+	ErrorQuestion:        "get question total number fail",
+	ErrorLogQPS:          "get log qps fail",
+	ErrorRequestNum:      "get request num fail",
+	ErrorQPSPeak:         "get qps peak fail",
+	ErrorSevenRequestNum: "get seven days request list fail",
 }

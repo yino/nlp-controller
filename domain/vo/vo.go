@@ -70,6 +70,11 @@ type LogQPS struct {
 	Total    int64  `json:"total"`
 }
 
+//最近七天
+type LogRequestSevenDays struct {
+	Data map[string][]LogQPS `json:"data"`
+}
+
 type RequestNum struct {
 	RequestTotal int64
 	ValidTotal   int64

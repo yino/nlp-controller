@@ -83,6 +83,28 @@ func (l *LogApp) QPSPeak(uid uint64) (vo.QPSPeak, int) {
 	return res, interfaces.StatusSuccess
 }
 
+// SevenDaysRequestNumList 七天内的请求总量
+func (l *LogApp) SevenDaysRequestNumList(uid uint64, startTime, endTime int64) (res vo.LogRequestSevenDays, ret int) {
+	ret = interfaces.StatusSuccess
+	totalRequestNumList, err := l.domain.RequestNumGroupByDay(uid, startTime, endTime)
+	if err != nil {
+		log.Error("log_app", "SevenDaysQPSGroupBYDay", "get SevenDaysQPSGroupBYDay totalRequestNumList fail", err)
+		ret = interfaces.ErrorSevenRequestNum
+		return
+	}
+
+	validRequestNumList, err := l.domain.ValidRequestNumGroupByDay(uid, startTime, endTime)
+	if err != nil {
+		log.Error("log_app", "SevenDaysQPSGroupBYDay", "get SevenDaysQPSGroupBYDay validRequestNumList fail", err)
+		ret = interfaces.ErrorSevenRequestNum
+		return
+	}
+	res.Data = make(map[string][]vo.LogQPS)
+	res.Data["all"] = totalRequestNumList
+	res.Data["valid"] = validRequestNumList
+	return
+}
+
 // NewLogApp new user app
 func NewLogApp(repo *persistence.Repositories) LogApp {
 	return LogApp{

@@ -75,6 +75,53 @@ func (l *Log) QPSPeak(uid uint64) (int64, error) {
 	return l.APILogRepo.MaxQPS(uid)
 }
 
+// QPSWeek 时间范围内所有请求量
+func (l *Log) RequestNumGroupByDay(uid uint64, startTime, endTime int64) (resp []vo.LogQPS, err error) {
+	var beginTime, OffTime time.Time
+	beginTime = time.Unix(startTime, 0)
+	OffTime = time.Unix(endTime, 0)
+	result, err := l.APILogRepo.CountByDay(uid, beginTime, OffTime)
+	if err != nil {
+		return
+	}
+	resp = buildCountByDay(result, startTime, endTime)
+	return
+}
+
+// QPSWeek 时间范围内有效请求量
+func (l *Log) ValidRequestNumGroupByDay(uid uint64, startTime, endTime int64) (resp []vo.LogQPS, err error) {
+	var beginTime, OffTime time.Time
+	beginTime = time.Unix(startTime, 0)
+	OffTime = time.Unix(endTime, 0)
+	// 所有请求量
+	result, err := l.APILogRepo.CountByDayByAPIStatus(uid, beginTime, OffTime, po.NORMAL)
+	if err != nil {
+		return
+	}
+	resp = buildCountByDay(result, startTime, endTime)
+	return
+}
+
+// buildCountByDay 按天分组处理RequestNum请求量
+func buildCountByDay(data []po.APILogGroupTime, startTime, endTime int64) (resp []vo.LogQPS) {
+	datetimeMap := make(map[string]int64)
+	for _, val := range data {
+		datetimeMap[val.Datetime] = val.Total
+	}
+	for i := startTime; i <= endTime; i += 86400 {
+		total := int64(0)
+		dateStr := time.Unix(i, 0).Format("2006-01-02")
+		if v, ok := datetimeMap[dateStr]; ok {
+			total = v
+		}
+		resp = append(resp, vo.LogQPS{
+			Datetime: dateStr,
+			Total:    total,
+		})
+	}
+	return
+}
+
 // NewUserDomain new domain.Log
 func NewLogDomain(repo repository.APILogRepository) Log {
 	return Log{

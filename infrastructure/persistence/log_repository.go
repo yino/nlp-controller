@@ -1,7 +1,6 @@
 package persistence
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/yino/nlp-controller/domain/po"
@@ -63,8 +62,52 @@ func (log *LogRepo) MaxQPS(uid uint64) (num int64, err error) {
 
 // GroupCountBySecondOfDay GroupCountBySecondOfDay
 func (log *LogRepo) GroupCountBySecondOfDay(uid uint64, startTime, endTime time.Time) (resp []po.APILogGroupTime, err error) {
-	where := fmt.Sprintf("where user_id=%d and created_at between '%s' and '%s'", uid, startTime.Format("2006-01-02 15:04:05"), endTime.Format("2006-01-02 15:04:05"))
-	sqlStr := "SELECT `datetime`, COUNT( * ) AS total FROM(SELECT *,DATE_FORMAT(concat( date( created_at ), ' ',HOUR ( created_at ), ':', MINUTE ( created_at ),':', SECOND(created_at)),'%Y-%m-%d %H:%i:%s') AS `datetime` FROM api_log " + where + ") a GROUP BY DATE_FORMAT( `datetime`, '%Y-%m-%d %H:%i' ) ORDER BY `datetime`"
-	err = log.db.Raw(sqlStr).Scan(&resp).Error
+	query := log.db.Model(&po.APILog{}).
+		Where("user_id = ?", uid).
+		Where("created_at between ? and ?", startTime.Format("2006-01-02 15:04:05"), endTime.Format("2006-01-02 15:04:05")).
+		Select("DATE_FORMAT(date(created_at),'%Y-%m-%d') AS `datetime`")
+
+	err = log.db.Table("(?) as a", query).
+		Debug().
+		Select("count(*) as total, datetime").
+		Group("DATE_FORMAT(`datetime`, '%Y-%m-%d')").
+		Order("datetime").
+		Scan(&resp).
+		Error
+	return
+}
+
+// CountByDay 分组统计
+func (log *LogRepo) CountByDay(uid uint64, startTime, endTime time.Time) (resp []po.APILogGroupTime, err error) {
+	query := log.db.Model(&po.APILog{}).
+		Where("user_id = ?", uid).
+		Where("created_at between ? and ?", startTime.Format("2006-01-02 15:04:05"), endTime.Format("2006-01-02 15:04:05")).
+		Select("DATE_FORMAT(date(created_at),'%Y-%m-%d') AS `datetime`")
+
+	err = log.db.Table("(?) as a", query).
+		Debug().
+		Select("count(*) as total, datetime").
+		Group("DATE_FORMAT(`datetime`, '%Y-%m-%d')").
+		Order("datetime").
+		Scan(&resp).
+		Error
+	return
+}
+
+// CountByDayByAPIStatus 分组统计 并按 api status 筛选
+func (log *LogRepo) CountByDayByAPIStatus(uid uint64, startTime, endTime time.Time, apiStatus string) (resp []po.APILogGroupTime, err error) {
+	query := log.db.Model(&po.APILog{}).
+		Where("user_id = ?", uid).
+		Where("created_at between ? and ?", startTime.Format("2006-01-02 15:04:05"), endTime.Format("2006-01-02 15:04:05")).
+		Where("api_status = ?", apiStatus).
+		Select("DATE_FORMAT(date(created_at),'%Y-%m-%d') AS `datetime`")
+
+	err = log.db.Table("(?) as a", query).
+		Debug().
+		Select("count(*) as total, datetime").
+		Group("DATE_FORMAT(`datetime`, '%Y-%m-%d')").
+		Order("datetime").
+		Scan(&resp).
+		Error
 	return
 }
