@@ -19,7 +19,6 @@ type Log struct {
 // Add 插入数据
 func (l *Log) Add(data *entity.Log) error {
 	apiLogPo := &data.APILog
-	fmt.Println(apiLogPo)
 	return l.APILogRepo.Add(apiLogPo)
 }
 

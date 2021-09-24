@@ -20,7 +20,7 @@ func NewLogRepository(db *gorm.DB) *LogRepo {
 
 // Add Add
 func (log *LogRepo) Add(apiLog *po.APILog) error {
-	return log.db.Create(apiLog).Error
+	return log.db.Debug().Create(apiLog).Error
 }
 
 //Page Page

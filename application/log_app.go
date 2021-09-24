@@ -40,7 +40,7 @@ func (l *LogApp) Write(uid uint64, method string, params []byte, header []byte, 
 	}
 	err := l.domain.Add(logEntity)
 	if err != nil {
-		log.Error("get Write err", err)
+		log.Error("Write err", err)
 		return interfaces.ErrorLogQPS
 	}
 	return interfaces.StatusSuccess
