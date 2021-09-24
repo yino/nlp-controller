@@ -1,6 +1,7 @@
 package application
 
 import (
+	"github.com/yino/nlp-controller/config/log"
 	"github.com/yino/nlp-controller/domain"
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/vo"
@@ -36,6 +37,7 @@ func (qa *QaQuestionApp) Add(uid uint64, req vo.QaAddReq) (int, string) {
 	}
 	err := qa.domain.Add(qaMaster, qaPoSlaveList)
 	if err != nil {
+		log.Error("add question", err)
 		return interfaces.ErrorCreateData, err.Error()
 	}
 	return interfaces.StatusSuccess, ""
@@ -59,6 +61,7 @@ func (qa *QaQuestionApp) Edit(uid uint64, req vo.QaEditReq) (int, string) {
 	}
 	err := qa.domain.Edit(uid, qaMaster, qaPoSlaveList)
 	if err != nil {
+		log.Error("Edit question", err)
 		return interfaces.ErrorUpdateData, err.Error()
 	}
 
@@ -68,6 +71,7 @@ func (qa *QaQuestionApp) Edit(uid uint64, req vo.QaEditReq) (int, string) {
 // Delete 删除
 func (qa *QaQuestionApp) Delete(uid, id uint64) (int, string) {
 	if err := qa.domain.Delete(uid, id); err != nil {
+		log.Error("Delete question", err)
 		return interfaces.ErrorDeleteData, err.Error()
 	}
 	return interfaces.StatusSuccess, ""
@@ -77,10 +81,12 @@ func (qa *QaQuestionApp) Delete(uid, id uint64) (int, string) {
 func (qa *QaQuestionApp) Info(uid, id uint64) (int, vo.QaQuestionInfoVo) {
 	infoVo, err := qa.domain.FindInfo(id)
 	if err != nil {
+		log.Error("info question find info", err)
 		return interfaces.ErrorGetData, infoVo
 	}
 
 	if infoVo.UserId != uid {
+		log.Error(" user id != uid", err)
 		return interfaces.ErrorDataNoteUser, infoVo
 	}
 
@@ -91,6 +97,7 @@ func (qa *QaQuestionApp) Info(uid, id uint64) (int, vo.QaQuestionInfoVo) {
 func (qa *QaQuestionApp) Match(uid uint64, question string) (int, vo.QaMatchQuestionVo) {
 	result, err := qa.domain.Match(uid, question)
 	if err != nil {
+		log.Error(" Match question", err)
 		return interfaces.ErrorMatchQuestion, vo.QaMatchQuestionVo{}
 	}
 
@@ -101,6 +108,7 @@ func (qa *QaQuestionApp) Match(uid uint64, question string) (int, vo.QaMatchQues
 func (qa *QaQuestionApp) Train(uid uint64) (int, string) {
 	err := qa.domain.Train(uid)
 	if err != nil {
+		log.Error("question train", err)
 		return interfaces.ErrorTrainQa, err.Error()
 	}
 	return interfaces.StatusSuccess, ""
@@ -110,6 +118,7 @@ func (qa *QaQuestionApp) Train(uid uint64) (int, string) {
 func (qa *QaQuestionApp) QuestionTotalNumber(uid uint64) (int, vo.QaQuestionTotal) {
 	resp, err := qa.domain.QuestionTotalNumber(uid)
 	if err != nil {
+		log.Error("question QuestionTotalNumber", err)
 		return interfaces.ErrorQuestion, resp
 	}
 	return interfaces.StatusSuccess, resp
