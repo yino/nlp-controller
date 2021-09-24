@@ -2,6 +2,8 @@ package log
 
 import (
 	"fmt"
+	"path"
+	"runtime"
 
 	"github.com/natefinch/lumberjack"
 	"github.com/yino/nlp-controller/config"
@@ -74,6 +76,26 @@ func InitLogger() {
 	Logger.Info("DefaultLogger init success")
 }
 
-func Error(fileName, funcName, msg string, err error) {
-	Logger.Error(fmt.Sprintf("【file:%s】, 【func: %s】, msg: %s", fileName, funcName, msg), zap.Error(err))
+func Error(msg string, err error) {
+	fileName, funcName, lineNum := getLine()
+	Logger.Error(
+		msg,
+		zap.Int("linenum", lineNum),
+		zap.String("fileName", fileName),
+		zap.String("funcName", funcName),
+		zap.Error(err),
+	)
+	//Logger.Error(fmt.Sprintf("【file:%s】, 【func: %s】, msg: %s", fileName, funcName, msg), zap.Error(err))
+}
+
+func getLine() (fileName, funcName string, line int) {
+	skip := 0
+	pc, file, line, ok := runtime.Caller(skip)
+	if !ok {
+		fmt.Println("get info failed")
+		return
+	}
+	fileName = path.Base(file)
+	funcName = runtime.FuncForPC(pc).Name()
+	return
 }

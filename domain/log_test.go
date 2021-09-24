@@ -72,7 +72,7 @@ func TestInvalidRequestTotalNum(t *testing.T) {
 }
 
 func TestMaxQPS(t *testing.T) {
-	total, err := logDomain.QPSPeak(1)
+	total, err := logDomain.QPSPeak(13)
 	fmt.Println(total, err)
 }
 func TestQPSWeekGroupByDay(t *testing.T) {

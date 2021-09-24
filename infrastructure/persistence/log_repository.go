@@ -1,18 +1,19 @@
 package persistence
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/yino/nlp-controller/domain/po"
 	"gorm.io/gorm"
 )
 
-// QaQuestionRepo qa repo infra
+// LogRepo .
 type LogRepo struct {
 	db *gorm.DB
 }
 
-// NewQaQuestionRepository qa test
+// NewLogRepository .
 func NewLogRepository(db *gorm.DB) *LogRepo {
 	return &LogRepo{db: db}
 }
@@ -45,15 +46,20 @@ func (log *LogRepo) CountByNormalStatus(uid uint64, status string) (count int64,
 	return
 }
 
-// CountByDay 统计最大的QPS
+// MaxQPS 统计最大的QPS
 func (log *LogRepo) MaxQPS(uid uint64) (num int64, err error) {
 
 	type Result struct {
 		QPS int64 `json:"qps"`
 	}
+	var count int64
+	err = log.db.Model(&po.APILog{}).Where("user_id = ?", uid).Count(&count).Error
+	if count == 0 || err != nil {
+		return 0, nil
+	}
 	var res Result
 	err = log.db.Model(&po.APILog{}).Where("user_id = ?", uid).Select("count(*) as qps").Group("created_at").Order("qps desc").First(&res).Error
-
+	fmt.Println("err", err)
 	if err == nil {
 		num = res.QPS
 	}
