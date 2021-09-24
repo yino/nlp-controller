@@ -55,7 +55,7 @@ func TestRequestTotalNum(t *testing.T) {
 }
 
 func TestQPS(t *testing.T) {
-	fmt.Println(logDomain.QPS(1, time.Now().Unix()-1000, time.Now().Unix()))
+	fmt.Println(logDomain.QPS(1, 1632467781, 1632469581))
 }
 
 func TestValidRequestTotalNum(t *testing.T) {

@@ -37,6 +37,7 @@ func (l *Log) QPS(uid uint64, startTime, endTime int64) (resp []vo.LogQPS, err e
 	beginTime = time.Unix(startTime, 0)
 	OffTime = time.Unix(endTime, 0)
 	result, err := l.APILogRepo.GroupCountBySecondOfDay(uid, beginTime, OffTime)
+	fmt.Println(result)
 	if err != nil {
 		return
 	}

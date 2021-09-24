@@ -73,12 +73,12 @@ func (log *LogRepo) GroupCountBySecondOfDay(uid uint64, startTime, endTime time.
 	query := log.db.Model(&po.APILog{}).
 		Where("user_id = ?", uid).
 		Where("created_at between ? and ?", startTime.Format("2006-01-02 15:04:05"), endTime.Format("2006-01-02 15:04:05")).
-		Select("DATE_FORMAT(date(created_at),'%Y-%m-%d') AS `datetime`")
+		Select("DATE_FORMAT(concat( date( created_at ), ' ',HOUR ( created_at ), ':', MINUTE ( created_at ),':', SECOND(created_at)),'%Y-%m-%d %H:%i:%s') as datetime")
 
 	err = log.db.Table("(?) as a", query).
 		Debug().
 		Select("count(*) as total, datetime").
-		Group("DATE_FORMAT(`datetime`, '%Y-%m-%d')").
+		Group("datetime").
 		Order("datetime").
 		Scan(&resp).
 		Error
