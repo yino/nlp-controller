@@ -1,6 +1,7 @@
 package application
 
 import (
+	"github.com/yino/nlp-controller/config/log"
 	"github.com/yino/nlp-controller/domain"
 	"github.com/yino/nlp-controller/domain/entity"
 	"github.com/yino/nlp-controller/domain/vo"
@@ -17,6 +18,7 @@ type UserApp struct {
 func (u *UserApp) Add(user *entity.User) (int, string) {
 	err := u.userDomain.Add(user)
 	if err != nil {
+		log.Error("user Add", err)
 		return interfaces.ErrorRegister, err.Error()
 	}
 	return interfaces.StatusSuccess, ""
@@ -24,23 +26,36 @@ func (u *UserApp) Add(user *entity.User) (int, string) {
 
 // Edit edit
 func (u *UserApp) Edit(user *entity.User) error {
-	return u.userDomain.Edit(user)
+	err := u.userDomain.Edit(user)
+	if err != nil {
+		log.Error("user edit", err)
+	}
+	return err
 }
 
 // GetUserList get user list
 func (u *UserApp) GetUserList(search map[string]interface{}) ([]vo.UserVo, error) {
-	return u.userDomain.GetUserList(search)
+	res, err := u.userDomain.GetUserList(search)
+	if err != nil {
+		log.Error("GetUserList", err)
+	}
+	return res, err
 }
 
 // GetUserPage get user list page
 func (u *UserApp) GetUserPage(search map[string]interface{}, page uint, pageSize uint) (pageVo vo.UserPageVo, err error) {
-	return u.userDomain.GetUserPage(search, page, pageSize)
+	pageVo, err = u.userDomain.GetUserPage(search, page, pageSize)
+	if err != nil {
+		log.Error("GetUserPage", err)
+	}
+	return
 }
 
 // UserInfo get user info by id
 func (u *UserApp) UserInfo(id uint64) (vo.UserVo, int) {
 	userVo, err := u.userDomain.UserInfo(id)
 	if err != nil {
+		log.Error("UserInfo", err)
 		return userVo, interfaces.ErrorUserNotFound
 	}
 	return userVo, interfaces.StatusSuccess
@@ -64,6 +79,7 @@ func (u *UserApp) AuthToken(token string) (vo.UserVo, int) {
 func (u *UserApp) CreateAk(uid uint64, akType string) (int, string) {
 	err := u.userDomain.CreateAppKey(uid, akType)
 	if err != nil {
+		log.Error("CreateAk", err)
 		return interfaces.ErrorCreateData, err.Error()
 	}
 	return interfaces.StatusSuccess, ""
@@ -79,6 +95,7 @@ func (u *UserApp) AkPage(uid uint64, createType string, page, pageSize uint) (re
 func (u *UserApp) DeleteUserAk(uid, id uint64) (int, string) {
 	err := u.userDomain.DeleteAppKey(id, uid)
 	if err != nil {
+		log.Error("DeleteUserAk", err)
 		return interfaces.ErrorDeleteData, err.Error()
 	}
 	return interfaces.StatusSuccess, ""
@@ -87,6 +104,7 @@ func (u *UserApp) DeleteUserAk(uid, id uint64) (int, string) {
 func (u *UserApp) FindAkByUser(ak string) (vo.UserVo, int) {
 	user, err := u.userDomain.FindUserByAk(ak)
 	if err != nil {
+		log.Error("FindAkByUser", err)
 		return user, interfaces.ErrorUserNotFound
 	}
 	return user, interfaces.StatusSuccess
