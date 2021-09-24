@@ -2,7 +2,6 @@ package log
 
 import (
 	"fmt"
-	"path"
 	"runtime"
 
 	"github.com/natefinch/lumberjack"
@@ -77,7 +76,7 @@ func InitLogger() {
 }
 
 func Error(msg string, err error) {
-	fileName, funcName, lineNum := getLine()
+	fileName, funcName, lineNum := getLine(2)
 	Logger.Error(
 		msg,
 		zap.Int("linenum", lineNum),
@@ -88,14 +87,13 @@ func Error(msg string, err error) {
 	//Logger.Error(fmt.Sprintf("【file:%s】, 【func: %s】, msg: %s", fileName, funcName, msg), zap.Error(err))
 }
 
-func getLine() (fileName, funcName string, line int) {
-	skip := 0
+func getLine(skip int) (fileName, funcName string, line int) {
 	pc, file, line, ok := runtime.Caller(skip)
 	if !ok {
 		fmt.Println("get info failed")
 		return
 	}
-	fileName = path.Base(file)
+	fileName = file
 	funcName = runtime.FuncForPC(pc).Name()
 	return
 }
